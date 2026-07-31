@@ -18,10 +18,3 @@ npm run start
 ```
 
 Mindmap content is distributed under the included GNU GPLv3 license.
-
-## GitHub Pages
-
-Pushes to `main` are automatically published to:
-[klepvink.github.io/OCD_Pathfinder](https://klepvink.github.io/OCD_Pathfinder/).
-
-In the repository settings, select **Pages → Source → GitHub Actions** once.
