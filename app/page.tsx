@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import ocdMindmap from "./ocd-mindmap.json";
+
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 type Status = "todo" | "found" | "clear";
 
@@ -230,6 +233,24 @@ export default function Home() {
                         <div className="reveals">Reveals {check.next.map((id) => <button key={id} onClick={() => setActiveId(id)}>{phaseById[id].title} ↗</button>)}</div>
                       )}
                     </div>
+                    {check.id === "mitm-ntlm-relay" && (
+                      <figure className="reference-chart">
+                        <div className="reference-chart-head">
+                          <div><span>REFERENCE FLOW</span><strong>NTLM relay decision chart</strong></div>
+                          <a href="https://beta.hackndo.com/assets/uploads/2020/03/ntlm_resume.png" target="_blank" rel="noreferrer">Original ↗</a>
+                        </div>
+                        <div className="reference-chart-canvas">
+                          <Image
+                            src={`${basePath}/ntlm-relay-flow.png`}
+                            alt="Decision chart showing NTLM relay paths between SMB, HTTP, LDAP, LDAPS and other services"
+                            width="950"
+                            height="936"
+                            loading="lazy"
+                          />
+                        </div>
+                        <figcaption>Reference chart by Hackndo. Open the original for full resolution.</figcaption>
+                      </figure>
+                    )}
                     {check.commands && check.commands.length > 0 && (
                       <div className="command-panel">
                         <div className="command-head">

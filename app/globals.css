@@ -117,6 +117,15 @@ h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; 
 .tags span { background: #f3f2f0; color: #666; padding: 4px 6px; font-size: 8px; text-transform: uppercase; letter-spacing: .4px; }
 .reveals { color: #999; font-size: 8px; }
 .reveals button { border: 0; background: transparent; color: var(--orange-dark); font-size: 8px; padding: 0 0 0 7px; cursor: pointer; }
+.reference-chart { margin: 14px 0 0; border: 1px solid #303531; background: #0d0f0e; }
+.reference-chart-head { min-height: 45px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 9px 11px; border-bottom: 1px solid #292d2a; }
+.reference-chart-head > div span, .reference-chart-head > div strong { display: block; }
+.reference-chart-head > div span { margin-bottom: 3px; color: #6f7b72; font-family: var(--font-geist-mono), monospace; font-size: 7px; letter-spacing: .9px; }
+.reference-chart-head > div strong { font-size: 10px; }
+.reference-chart-head a { color: #8ee8a9; font-family: var(--font-geist-mono), monospace; font-size: 8px; text-decoration: none; }
+.reference-chart-canvas { padding: clamp(10px, 2vw, 22px); overflow: hidden; background: #f5f5f1; }
+.reference-chart img { display: block; width: min(100%, 760px); height: auto; margin: 0 auto; }
+.reference-chart figcaption { padding: 8px 11px; border-top: 1px solid #292d2a; color: #69716b; font-family: var(--font-geist-mono), monospace; font-size: 7px; }
 .command-panel { margin-top: 13px; border: 1px solid #dedbd6; background: #f8f7f5; }
 .command-head { min-height: 36px; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 7px 9px; border-bottom: 1px solid #e2dfda; }
 .command-head > div:first-child { display: flex; align-items: center; gap: 6px; }
