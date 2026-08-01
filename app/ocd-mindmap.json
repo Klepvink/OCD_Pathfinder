@@ -1,7 +1,7 @@
 {
   "source": "Orange-Cyberdefense/ocd-mindmaps",
   "version": "2025.03",
-  "generatedAt": "2026-08-01T09:12:33.743Z",
+  "generatedAt": "2026-08-01T11:11:06.602Z",
   "phases": [
     {
       "id": "no-creds",
@@ -9,7 +9,7 @@
       "title": "No Credentials",
       "eyebrow": "01 · Initial access",
       "color": "#f59e0b",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from no_creds.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "no_creds-scan-network-vulnerable-host",
@@ -226,7 +226,7 @@
       "title": "Valid user (no password)",
       "eyebrow": "02 · Identity",
       "color": "#f97316",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from valid_user.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "valid_user-password-spray",
@@ -296,7 +296,7 @@
       "title": "Quick Compromise",
       "eyebrow": "03 · Quick compromise",
       "color": "#eab308",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from low_hanging.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "low_hanging-zerologon-unsafe-cve-2020-1472-cve-domain-admin",
@@ -496,7 +496,7 @@
       "title": "Man In The Middle (Listen and Relay)",
       "eyebrow": "04 · Network position",
       "color": "#ef4444",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from mitm.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "mitm-listen-hash-ntlmv1-or-ntlmv2-username-credentials-ldap-http",
@@ -575,7 +575,7 @@
       "title": "Crack hash",
       "eyebrow": "05 · Credential recovery",
       "color": "#ec4899",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from crack_hash.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "crack_hash-lm-299bd128c1101fd6",
@@ -735,7 +735,7 @@
       "title": "Valid Credentials (cleartext creds, nt hash, kerberos ticket)",
       "eyebrow": "06 · Domain context",
       "color": "#8b5cf6",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from authenticated.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "authenticated-classic-enumeration-users-shares-acl-delegation",
@@ -927,7 +927,7 @@
       "title": "Low access (Privilege escalation)",
       "eyebrow": "07 · Host escalation",
       "color": "#22c55e",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from low_access.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "low_access-bypass-applocker-low-access-without-applocker",
@@ -1074,7 +1074,7 @@
       "title": "Know vulnerabilities authenticated",
       "eyebrow": "08 · Known vulnerabilities",
       "color": "#f43f5e",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from know_vuln_auth.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "know_vuln_auth-ms14-068-ptt-domain-admin-admin",
@@ -1208,7 +1208,7 @@
       "title": "ACLs/ACEs permissions",
       "eyebrow": "09 · Directory permissions",
       "color": "#06b6d4",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from acl.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "acl-dcsync-domain-admin-lateral-move-crack-hash",
@@ -1393,7 +1393,7 @@
       "title": "Kerberos Delegation",
       "eyebrow": "10 · Ticket paths",
       "color": "#3b82f6",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from delegation.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "delegation-find-delegation",
@@ -1505,7 +1505,7 @@
       "title": "ADCS",
       "eyebrow": "11 · Certificate paths",
       "color": "#14b8a6",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from adcs.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "adcs-enumeration-web-enrollement-vulnerable-template-vulnerable-ca-misconfigured-acl-vulnerable-pki-object-ac",
@@ -1680,7 +1680,7 @@
       "title": "SCCM",
       "eyebrow": "12 · Management plane",
       "color": "#84cc16",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from sccm.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "sccm-recon",
@@ -1952,7 +1952,7 @@
       "title": "Admin access",
       "eyebrow": "13 · Credential access",
       "color": "#a855f7",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from admin.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "admin-extract-credentials-from-lsass-exe",
@@ -2133,7 +2133,7 @@
       "title": "Lateral Move",
       "eyebrow": "14 · Expansion",
       "color": "#6366f1",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from lat_move.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "lat_move-clear-text-password-admin",
@@ -2347,7 +2347,7 @@
       "title": "Domain admin",
       "eyebrow": "15 · Domain control",
       "color": "#dc2626",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from dom_admin.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "dom_admin-dump-ntds-dit-lateral-move-crack-hash",
@@ -2401,7 +2401,7 @@
       "title": "Trusts",
       "eyebrow": "16 · Cross-boundary",
       "color": "#0ea5e9",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from trusts.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "trusts-enumeration",
@@ -2521,7 +2521,7 @@
       "title": "Persistence",
       "eyebrow": "17 · Post-exploitation",
       "color": "#64748b",
-      "description": "Original Orange Cyberdefense v2025.03 checks and commands from persistence.md.",
+      "description": "Original Orange Cyberdefense v2025.03 checks and commands.",
       "checks": [
         {
           "id": "persistence-add-da",

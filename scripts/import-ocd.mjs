@@ -91,7 +91,7 @@ async function parseFile(file) {
     title,
     eyebrow: meta[key]?.[0] || "Reference",
     color: meta[key]?.[1] || "#64748b",
-    description: `Original Orange Cyberdefense v2025.03 checks and commands from ${file}.`,
+    description: "Original Orange Cyberdefense v2025.03 checks and commands.",
     checks: [],
   };
   let current = null;

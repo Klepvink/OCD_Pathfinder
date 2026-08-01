@@ -5,6 +5,7 @@ import Image from "next/image";
 import ocdMindmap from "./ocd-mindmap.json";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const ocdAdSourceUrl = "https://github.com/Orange-Cyberdefense/ocd-mindmaps/blob/main/excalimap/mindmap/ad";
 
 type Status = "todo" | "found" | "clear";
 
@@ -22,6 +23,7 @@ type Check = {
 
 type Phase = {
   id: string;
+  sourceKey: string;
   title: string;
   description: string;
   color: string;
@@ -153,7 +155,12 @@ export default function Home() {
           <div className="content-head">
             <div>
               <h1 className="phase-title"><span style={{ color: phase.color }}>{phaseNumber}</span>{phase.title}</h1>
-              <p className="description">{phase.description}</p>
+              <p className="description">
+                {phase.description}{" "}
+                <a href={`${ocdAdSourceUrl}/${phase.sourceKey}.md`} target="_blank" rel="noreferrer">
+                  {phase.sourceKey}.md ↗
+                </a>
+              </p>
             </div>
             <div className="progress-card">
               <div className="progress-copy"><strong>{progress}%</strong><span>engagement reviewed</span></div>

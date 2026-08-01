@@ -63,6 +63,8 @@ h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; 
 .phase-title { display: flex; align-items: baseline; gap: 13px; }
 .phase-title > span { flex: 0 0 auto; font-family: var(--font-geist-mono), monospace; font-size: .38em; font-weight: 700; letter-spacing: .5px; }
 .description { max-width: 620px; margin: 0; color: #686868; font-size: 13px; line-height: 1.55; }
+.description a { color: inherit; font-family: var(--font-geist-mono), monospace; font-size: .78em; text-decoration-color: #4d554f; text-underline-offset: 3px; }
+.description a:hover { color: #8ee8a9; text-decoration-color: #8ee8a9; }
 .progress-card { min-width: 150px; padding-bottom: 3px; }
 .progress-copy { display: flex; align-items: baseline; gap: 7px; margin-bottom: 8px; }
 .progress-copy strong { font-size: 20px; }
