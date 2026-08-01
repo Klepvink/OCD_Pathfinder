@@ -609,6 +609,7 @@ body::before {
 .operator-actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 7px;
 }
 
@@ -637,6 +638,16 @@ body::before {
 .compact-reset span {
   font-size: 7px;
   letter-spacing: .7px;
+}
+
+.import-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @keyframes terminal-cursor {

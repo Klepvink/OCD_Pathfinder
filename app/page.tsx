@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import ocdMindmap from "./ocd-mindmap.json";
 
@@ -33,6 +33,9 @@ type Phase = {
 const phases = ocdMindmap.phases as Phase[];
 const allChecks = phases.flatMap((phase) => phase.checks);
 const phaseById = Object.fromEntries(phases.map((phase) => [phase.id, phase]));
+const knownCheckIds = new Set(allChecks.map((check) => check.id));
+const backupFormat = "ad-pathfinder-engagement";
+const backupVersion = 1;
 
 export default function Home() {
   const [activeId, setActiveId] = useState("no-creds");
@@ -43,6 +46,7 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [showClear, setShowClear] = useState(true);
   const [ready, setReady] = useState(false);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     try {
@@ -83,6 +87,77 @@ export default function Home() {
     setStatuses({});
     setNotes({});
     setProfile({ domain: "", username: "" });
+  }
+
+  function exportEngagement() {
+    const accepted = window.confirm(
+      "Exported engagement data is not encrypted and may contain sensitive client information. Keep the file secure and only import it into AD Pathfinder deployments you trust. Continue?",
+    );
+    if (!accepted) return;
+
+    const backup = {
+      format: backupFormat,
+      version: backupVersion,
+      exportedAt: new Date().toISOString(),
+      data: { statuses, notes, profile },
+    };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `ad-pathfinder-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function requestImport() {
+    const accepted = window.confirm(
+      "Only import engagement files into AD Pathfinder deployments you trust. The file may contain sensitive client data. Continue and choose a file?",
+    );
+    if (accepted) importInputRef.current?.click();
+  }
+
+  async function importEngagement(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    try {
+      if (file.size > 1024 * 1024) throw new Error("The backup is larger than 1 MB.");
+      const parsed = JSON.parse(await file.text()) as Record<string, unknown>;
+      if (parsed.format !== backupFormat || parsed.version !== backupVersion || !parsed.data || typeof parsed.data !== "object") {
+        throw new Error("This is not a supported AD Pathfinder engagement backup.");
+      }
+
+      const data = parsed.data as Record<string, unknown>;
+      const rawStatuses = data.statuses && typeof data.statuses === "object" ? data.statuses as Record<string, unknown> : {};
+      const rawNotes = data.notes && typeof data.notes === "object" ? data.notes as Record<string, unknown> : {};
+      const rawProfile = data.profile && typeof data.profile === "object" ? data.profile as Record<string, unknown> : {};
+      const importedStatuses = Object.fromEntries(
+        Object.entries(rawStatuses).filter(([id, status]) => knownCheckIds.has(id) && ["todo", "found", "clear"].includes(String(status))),
+      ) as Record<string, Status>;
+      const importedNotes = Object.fromEntries(
+        Object.entries(rawNotes)
+          .filter(([id, note]) => knownCheckIds.has(id) && typeof note === "string")
+          .map(([id, note]) => [id, (note as string).slice(0, 100_000)]),
+      );
+      const importedProfile = {
+        domain: typeof rawProfile.domain === "string" ? rawProfile.domain.slice(0, 500) : "",
+        username: typeof rawProfile.username === "string" ? rawProfile.username.slice(0, 500) : "",
+      };
+
+      const accepted = window.confirm(
+        `Import ${Object.keys(importedStatuses).length} check statuses and ${Object.keys(importedNotes).length} notes? This replaces the current engagement data.`,
+      );
+      if (!accepted) return;
+      setStatuses(importedStatuses);
+      setNotes(importedNotes);
+      setProfile(importedProfile);
+      window.alert("Engagement imported successfully.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "The file could not be read.";
+      window.alert(`Import failed: ${message}`);
+    }
   }
 
   function hydrateCommand(command: string) {
@@ -149,6 +224,17 @@ export default function Home() {
                 <span>⌕</span>
                 <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search checks, tools, protocols…" aria-label="Search checks" />
               </label>
+              <button className="icon-button compact-reset" onClick={exportEngagement} title="Export engagement">↓ <span>EXPORT</span></button>
+              <button className="icon-button compact-reset" onClick={requestImport} title="Import engagement">↑ <span>IMPORT</span></button>
+              <input
+                ref={importInputRef}
+                className="import-file-input"
+                type="file"
+                accept="application/json,.json"
+                onChange={importEngagement}
+                tabIndex={-1}
+                aria-hidden="true"
+              />
               <button className="icon-button compact-reset" onClick={resetEngagement} title="Reset engagement">↻ <span>RESET</span></button>
             </div>
           </div>
