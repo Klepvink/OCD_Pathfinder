@@ -156,7 +156,6 @@ export default function Home() {
             <div>
               <h1 className="phase-title"><span style={{ color: phase.color }}>{phaseNumber}</span>{phase.title}</h1>
               <p className="description">
-                {phase.description}{" "}
                 <a href={`${ocdAdSourceUrl}/${phase.sourceKey}.md`} target="_blank" rel="noreferrer">
                   {phase.sourceKey}.md ↗
                 </a>
