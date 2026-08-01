@@ -209,7 +209,9 @@
           "commands": [
             "timeroast.py <dc_ip> -o <output_log>"
           ],
-          "userCommands": [],
+          "userCommands": [
+            "nxc smb <dc_ip> -M timeroast"
+          ],
           "tools": [
             "timeroast.py"
           ],
