@@ -53,6 +53,7 @@ export default function Home() {
   const [copied, setCopied] = useState("");
   const [query, setQuery] = useState("");
   const [showClear, setShowClear] = useState(true);
+  const [showInformation, setShowInformation] = useState(false);
   const [ready, setReady] = useState(false);
   const importInputRef = useRef<HTMLInputElement>(null);
 
@@ -70,6 +71,15 @@ export default function Home() {
   useEffect(() => {
     if (ready) localStorage.setItem("ad-pathfinder-v1", JSON.stringify({ statuses, notes, profile }));
   }, [statuses, notes, profile, ready]);
+
+  useEffect(() => {
+    if (!showInformation) return;
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setShowInformation(false);
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [showInformation]);
 
   const foundChecks = allChecks.filter((check) => statuses[check.id] === "found");
   const unlocked = useMemo(() => {
@@ -259,6 +269,15 @@ export default function Home() {
               />
               <button className="icon-button compact-reset" onClick={resetEngagement} title="Reset engagement">↻ <span>RESET</span></button>
             </div>
+            <button
+              className="information-button"
+              type="button"
+              onClick={() => setShowInformation(true)}
+              aria-label="About AD Pathfinder"
+              title="About AD Pathfinder"
+            >
+              i
+            </button>
           </div>
           <div className="content-head">
             <div>
@@ -420,6 +439,50 @@ export default function Home() {
         </section>
 
       </section>
+      {showInformation && (
+        <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setShowInformation(false)}>
+          <section className="information-modal" role="dialog" aria-modal="true" aria-labelledby="information-title">
+            <div className="information-modal-head">
+              <div>
+                <span>About this project</span>
+                <h2 id="information-title">AD Pathfinder</h2>
+              </div>
+              <button type="button" onClick={() => setShowInformation(false)} aria-label="Close information">×</button>
+            </div>
+
+            <div className="information-modal-body">
+              <section>
+                <h3>Authorized testing only</h3>
+                <p>
+                  AD Pathfinder is intended for security testing performed with explicit permission. You are responsible for ensuring that its use is lawful and remains within the agreed scope.
+                </p>
+              </section>
+
+              <section>
+                <h3>With gratitude</h3>
+                <p>
+                  This interface builds on the research and project published by Orange Cyberdefense through OCD Mindmaps. Thank you to the original authors and contributors.
+                </p>
+              </section>
+
+              <dl className="credit-list">
+                <div>
+                  <dt>Original research</dt>
+                  <dd><a href="https://github.com/Orange-Cyberdefense/ocd-mindmaps" target="_blank" rel="noreferrer">Orange Cyberdefense OCD Mindmaps ↗</a></dd>
+                </div>
+                <div>
+                  <dt>Project source</dt>
+                  <dd><a href="https://github.com/Klepvink/OCD_Pathfinder" target="_blank" rel="noreferrer">Klepvink/OCD_Pathfinder ↗</a></dd>
+                </div>
+                <div>
+                  <dt>Metasploit icon</dt>
+                  <dd><a href="https://simpleicons.org/?q=metasploit" target="_blank" rel="noreferrer">Simple Icons ↗</a><span>License: CC0</span></dd>
+                </div>
+              </dl>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   );
 }
