@@ -639,15 +639,6 @@ body::before {
   letter-spacing: .7px;
 }
 
-.content-head h1::after {
-  content: "_";
-  margin-left: 5px;
-  color: #76dd96;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: .72em;
-  animation: terminal-cursor 1.15s steps(1) infinite;
-}
-
 @keyframes terminal-cursor {
   50% { opacity: 0; }
 }
