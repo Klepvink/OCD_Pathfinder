@@ -421,7 +421,6 @@ export default function Home() {
                         </div>
                       </div>
                     )}
-                    {check.source && <div className="source-line">Source: <code>{check.source}</code> · Orange Cyberdefense v{ocdMindmap.version}</div>}
                     {(status !== "todo" || notes[check.id]) && (
                       <textarea
                         value={notes[check.id] || ""}
