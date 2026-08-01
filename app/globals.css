@@ -37,7 +37,7 @@ button { color: inherit; }
 .workspace { display: grid; grid-template-columns: 250px minmax(560px, 1fr) 280px; min-height: calc(100vh - 72px); }
 .sidebar { background: #fff; border-right: 1px solid var(--line); padding: 24px 14px; display: flex; flex-direction: column; }
 .sidebar-heading { padding: 0 10px 16px; display: flex; justify-content: space-between; align-items: center; }
-.sidebar-heading p { margin: 0; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.1px; }
+.sidebar-heading p { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: 1.1px; }
 .sidebar-heading span { font-size: 10px; color: var(--muted); }
 .sidebar nav { display: grid; gap: 3px; }
 .nav-item { width: 100%; min-height: 52px; display: flex; align-items: center; gap: 10px; border: 0; background: transparent; padding: 7px 9px; cursor: pointer; text-align: left; border-left: 3px solid transparent; }
@@ -91,7 +91,7 @@ h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; 
 .next-chips button span { color: var(--chip-color); margin-left: 4px; }
 .list-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .list-toolbar > div { display: flex; align-items: center; gap: 8px; }
-.list-toolbar strong { font-size: 11px; text-transform: uppercase; letter-spacing: .8px; }
+.list-toolbar strong { font-size: 11px; letter-spacing: .8px; }
 .list-toolbar > div span { color: #999; font-size: 9px; }
 .toggle-label { display: flex; align-items: center; gap: 7px; color: #777; font-size: 9px; cursor: pointer; }
 .toggle-label input { display: none; }
@@ -130,7 +130,7 @@ h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; 
 .command-panel { margin-top: 13px; border: 1px solid #dedbd6; background: #f8f7f5; }
 .command-head { min-height: 36px; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 7px 9px; border-bottom: 1px solid #e2dfda; }
 .command-head > div:first-child { display: flex; align-items: center; gap: 6px; }
-.command-head strong { font-size: 8px; text-transform: uppercase; letter-spacing: .65px; }
+.command-head strong { font-size: 8px; letter-spacing: .65px; }
 .command-head > div:first-child > span { min-width: 17px; height: 17px; border-radius: 9px; background: #e7e4df; color: #65615c; display: grid; place-items: center; font-size: 8px; }
 .tool-list { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
 .tool-list span { background: #fff; border: 1px solid #ddd9d3; color: #5d5954; padding: 3px 5px; font-family: var(--font-geist-mono), monospace; font-size: 7px; }
@@ -151,7 +151,7 @@ h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; 
 
 .insights { border-left: 1px solid var(--line); background: #f7f6f4; padding: 28px 22px; }
 .insight-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #dedbd7; }
-.insight-head span { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+.insight-head span { font-size: 10px; font-weight: 800; letter-spacing: 1px; }
 .insight-head strong { color: var(--orange-dark); font-size: 9px; }
 .empty-path { text-align: center; padding: 54px 18px; border-bottom: 1px solid #dedbd7; }
 .empty-path > span { width: 40px; height: 40px; display: grid; place-items: center; margin: 0 auto 14px; border: 1px solid #ccc7c1; border-radius: 50%; color: var(--orange); }
@@ -168,14 +168,14 @@ h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; 
 .path-list small { color: #999; font-size: 8px; margin-bottom: 3px; }
 .path-list strong { font-size: 10px; line-height: 1.35; }
 .legend { padding: 22px 0; border-bottom: 1px solid #dedbd7; }
-.legend h3 { margin: 0 0 13px; font-size: 10px; text-transform: uppercase; letter-spacing: .7px; }
+.legend h3 { margin: 0 0 13px; font-size: 10px; letter-spacing: .7px; }
 .legend p { display: flex; align-items: center; gap: 8px; margin: 8px 0; color: #777; font-size: 9px; }
 .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
 .legend-dot.found { background: var(--orange); }
 .legend-dot.clear { background: #40a468; }
 .legend-dot.note { background: #9b8ef3; }
 .safety { margin-top: 22px; border-left: 2px solid var(--orange); padding-left: 11px; }
-.safety strong { font-size: 9px; text-transform: uppercase; letter-spacing: .7px; }
+.safety strong { font-size: 9px; letter-spacing: .7px; }
 .safety p { color: #888; font-size: 8px; line-height: 1.5; }
 
 @media (max-width: 1120px) {
