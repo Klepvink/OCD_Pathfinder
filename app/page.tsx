@@ -134,7 +134,6 @@ export default function Home() {
             })}
           </nav>
           <div className="source-card">
-            <span>OPEN SOURCE</span>
             <strong>Based on OCD Mindmaps</strong>
             <p>Active Directory v2025.03</p>
             <a href="https://github.com/Orange-Cyberdefense/ocd-mindmaps" target="_blank" rel="noreferrer">View original ↗</a>
