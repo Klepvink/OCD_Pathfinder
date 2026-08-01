@@ -59,8 +59,9 @@ button { color: inherit; }
 
 .content { padding: 38px clamp(24px, 3vw, 54px) 80px; max-width: 1080px; width: 100%; margin: 0 auto; }
 .content-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; margin-bottom: 28px; }
-.eyebrow { margin: 0 0 9px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.4px; }
 h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; margin: 0 0 13px; }
+.phase-title { display: flex; align-items: baseline; gap: 13px; }
+.phase-title > span { flex: 0 0 auto; font-family: var(--font-geist-mono), monospace; font-size: .38em; font-weight: 700; letter-spacing: .5px; }
 .description { max-width: 620px; margin: 0; color: #686868; font-size: 13px; line-height: 1.55; }
 .progress-card { min-width: 150px; padding-bottom: 3px; }
 .progress-copy { display: flex; align-items: baseline; gap: 7px; margin-bottom: 8px; }
@@ -563,7 +564,6 @@ body::before {
 .sidebar-heading span,
 .nav-number,
 .nav-copy small,
-.eyebrow,
 .list-toolbar,
 .engagement-profile,
 .source-line {

@@ -23,7 +23,6 @@ type Check = {
 type Phase = {
   id: string;
   title: string;
-  eyebrow: string;
   description: string;
   color: string;
   checks: Check[];
@@ -65,6 +64,7 @@ export default function Home() {
     return ids;
   }, [foundChecks]);
   const phase = phaseById[activeId];
+  const phaseNumber = String(phases.findIndex((item) => item.id === phase.id) + 1).padStart(2, "0");
   const visibleChecks = phase.checks.filter((check) => {
     const haystack = `${check.title} ${check.detail} ${(check.tools ?? []).join(" ")} ${(check.commands ?? []).join(" ")} ${(check.userCommands ?? []).join(" ")}`.toLowerCase();
     return haystack.includes(query.toLowerCase()) && (showClear || statuses[check.id] !== "clear");
@@ -152,8 +152,7 @@ export default function Home() {
           </div>
           <div className="content-head">
             <div>
-              <p className="eyebrow" style={{ color: phase.color }}>{phase.eyebrow}</p>
-              <h1>{phase.title}</h1>
+              <h1 className="phase-title"><span style={{ color: phase.color }}>{phaseNumber}</span>{phase.title}</h1>
               <p className="description">{phase.description}</p>
             </div>
             <div className="progress-card">
