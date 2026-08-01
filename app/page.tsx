@@ -12,7 +12,6 @@ type Check = {
   id: string;
   title: string;
   detail: string;
-  tags: string[];
   commands?: string[];
   userCommands?: string[];
   tools?: string[];
@@ -67,7 +66,7 @@ export default function Home() {
   }, [foundChecks]);
   const phase = phaseById[activeId];
   const visibleChecks = phase.checks.filter((check) => {
-    const haystack = `${check.title} ${check.detail} ${check.tags.join(" ")} ${(check.userCommands ?? []).join(" ")}`.toLowerCase();
+    const haystack = `${check.title} ${check.detail} ${(check.tools ?? []).join(" ")} ${(check.commands ?? []).join(" ")} ${(check.userCommands ?? []).join(" ")}`.toLowerCase();
     return haystack.includes(query.toLowerCase()) && (showClear || statuses[check.id] !== "clear");
   });
   const completed = allChecks.filter((check) => statuses[check.id] && statuses[check.id] !== "todo").length;

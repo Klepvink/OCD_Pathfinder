@@ -103,7 +103,6 @@ async function parseFile(file) {
         id: checkId,
         title: clean(raw),
         detail: "",
-        tags: [],
         commands: [],
         userCommands: existingUserCommands.get(checkId) ?? [],
         tools: [],
@@ -129,12 +128,9 @@ async function parseFile(file) {
         current.detail = [current.detail, text].filter(Boolean).join(" · ");
       }
     }
-    if (/@CVE@|CVE-\d{4}/i.test(line) && !current.tags.includes("CVE")) current.tags.push("CVE");
   }
   for (const check of phase.checks) {
     if (!check.detail) check.detail = "Review the source condition and record the result.";
-    if (!check.tags.length) check.tags = check.tools.slice(0, 3);
-    check.tags = [...new Set([...check.tags, ...check.tools.slice(0, 2)])].slice(0, 4);
   }
   return phase;
 }
