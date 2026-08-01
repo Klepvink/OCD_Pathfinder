@@ -138,6 +138,8 @@ h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; 
 .command-row { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; border-bottom: 1px solid #e7e4df; }
 .command-row:last-child { border-bottom: 0; }
 .command-row code { overflow-x: auto; padding: 10px; color: #282725; font-family: var(--font-geist-mono), monospace; font-size: 9px; line-height: 1.45; white-space: pre; scrollbar-width: thin; }
+.command-row code.metasploit-command { display: flex; align-items: center; gap: 8px; }
+.metasploit-logo { width: 14px; height: 14px; flex: 0 0 auto; fill: #8ee8a9; }
 .command-row button { width: 54px; border: 0; border-left: 1px solid #e2dfda; background: #fff; color: #777; font-size: 8px; cursor: pointer; }
 .command-row button:hover { background: #fff0e2; color: var(--orange-dark); }
 .user-command-panel { border-color: #375342; }
