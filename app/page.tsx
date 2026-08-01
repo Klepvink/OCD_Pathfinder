@@ -253,9 +253,6 @@ export default function Home() {
                       <div className="command-panel">
                         <div className="command-head">
                           <div><strong>Commands from OCD Mindmaps</strong><span>{check.commands.length}</span></div>
-                          {check.tools && check.tools.length > 0 && (
-                            <div className="tool-list">{check.tools.map((tool) => <span key={tool}>{tool}</span>)}</div>
-                          )}
                         </div>
                         <div className="commands">
                           {check.commands.map((command, commandIndex) => {
