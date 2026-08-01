@@ -634,7 +634,9 @@
             "ntlmrelayx.py -t mssql://<ip> [-smb2support] -socks",
             "ntlmrelayx.py -t dcsync://<dc_to_ip> -smb2support -auth-smb <user>:<password>"
           ],
-          "userCommands": [],
+          "userCommands": [
+            "python3 LdapRelayScan.py -method LDAPS -dc-ip 10.0.0.20"
+          ],
           "tools": [
             "msf>",
             "ntlmrelayx.py",
