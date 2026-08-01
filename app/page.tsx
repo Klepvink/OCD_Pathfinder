@@ -472,7 +472,7 @@ export default function Home() {
                 </div>
                 <div>
                   <dt>Project source</dt>
-                  <dd><a href="https://github.com/Klepvink/OCD_Pathfinder" target="_blank" rel="noreferrer">Klepvink/OCD_Pathfinder ↗</a></dd>
+                  <dd><a href="https://github.com/Klepvink/ad_pathfinder" target="_blank" rel="noreferrer">Klepvink/ad_pathfinder ↗</a></dd>
                 </div>
                 <div>
                   <dt>Metasploit icon</dt>

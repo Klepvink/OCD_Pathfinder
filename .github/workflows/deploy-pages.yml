@@ -36,7 +36,7 @@ jobs:
       - name: Build static site
         run: npm run build
         env:
-          NEXT_PUBLIC_BASE_PATH: /OCD_Pathfinder
+          NEXT_PUBLIC_BASE_PATH: /ad_pathfinder
 
       - name: Disable Jekyll processing
         run: touch out/.nojekyll
