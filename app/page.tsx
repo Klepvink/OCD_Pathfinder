@@ -14,6 +14,7 @@ type Check = {
   detail: string;
   tags: string[];
   commands?: string[];
+  userCommands?: string[];
   tools?: string[];
   source?: string;
   next?: string[];
@@ -66,7 +67,7 @@ export default function Home() {
   }, [foundChecks]);
   const phase = phaseById[activeId];
   const visibleChecks = phase.checks.filter((check) => {
-    const haystack = `${check.title} ${check.detail} ${check.tags.join(" ")}`.toLowerCase();
+    const haystack = `${check.title} ${check.detail} ${check.tags.join(" ")} ${(check.userCommands ?? []).join(" ")}`.toLowerCase();
     return haystack.includes(query.toLowerCase()) && (showClear || statuses[check.id] !== "clear");
   });
   const completed = allChecks.filter((check) => statuses[check.id] && statuses[check.id] !== "todo").length;
@@ -227,12 +228,11 @@ export default function Home() {
                       </div>
                     </div>
                     {check.caution && <div className="caution">⚠ {check.caution}</div>}
-                    <div className="check-meta">
-                      <div className="tags">{check.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
-                      {check.next && status === "found" && (
+                    {check.next && status === "found" && (
+                      <div className="check-meta">
                         <div className="reveals">Reveals {check.next.map((id) => <button key={id} onClick={() => setActiveId(id)}>{phaseById[id].title} ↗</button>)}</div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                     {check.id === "mitm-ntlm-relay" && (
                       <figure className="reference-chart">
                         <div className="reference-chart-head">
@@ -266,6 +266,26 @@ export default function Home() {
                               <div className="command-row" key={commandId}>
                                 <code>{hydrateCommand(command)}</code>
                                 <button onClick={() => copyCommand(commandId, command)} aria-label="Copy command">
+                                  {copied === commandId ? "Copied" : "Copy"}
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                    {check.userCommands && check.userCommands.length > 0 && (
+                      <div className="command-panel user-command-panel">
+                        <div className="command-head">
+                          <div><strong>User-submitted commands</strong><span>{check.userCommands.length}</span></div>
+                        </div>
+                        <div className="commands">
+                          {check.userCommands.map((command, commandIndex) => {
+                            const commandId = `${check.id}-user-${commandIndex}`;
+                            return (
+                              <div className="command-row" key={commandId}>
+                                <code>{hydrateCommand(command)}</code>
+                                <button onClick={() => copyCommand(commandId, command)} aria-label="Copy user-submitted command">
                                   {copied === commandId ? "Copied" : "Copy"}
                                 </button>
                               </div>

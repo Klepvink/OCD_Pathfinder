@@ -113,8 +113,6 @@ h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; 
 .status-actions .selected.found { background: #fff0e2; color: #b94c00; border-color: #ffc18c; }
 .caution { margin-top: 10px; padding: 7px 9px; background: #fff6da; color: #8b6400; font-size: 9px; }
 .check-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 13px; }
-.tags { display: flex; gap: 5px; flex-wrap: wrap; }
-.tags span { background: #f3f2f0; color: #666; padding: 4px 6px; font-size: 8px; text-transform: uppercase; letter-spacing: .4px; }
 .reveals { color: #999; font-size: 8px; }
 .reveals button { border: 0; background: transparent; color: var(--orange-dark); font-size: 8px; padding: 0 0 0 7px; cursor: pointer; }
 .reference-chart { margin: 14px 0 0; border: 1px solid #303531; background: #0d0f0e; }
@@ -139,6 +137,9 @@ h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; 
 .command-row code { overflow-x: auto; padding: 10px; color: #282725; font-family: var(--font-geist-mono), monospace; font-size: 9px; line-height: 1.45; white-space: pre; scrollbar-width: thin; }
 .command-row button { width: 54px; border: 0; border-left: 1px solid #e2dfda; background: #fff; color: #777; font-size: 8px; cursor: pointer; }
 .command-row button:hover { background: #fff0e2; color: var(--orange-dark); }
+.user-command-panel { border-color: #375342; }
+.user-command-panel .command-head { background: #101a13; border-color: #294033; }
+.user-command-panel .command-head strong { color: #8ee8a9; }
 .source-line { margin-top: 8px; color: #9a9690; font-size: 7px; }
 .source-line code { color: #716d67; font-size: 7px; }
 .check-card textarea { width: 100%; min-height: 54px; resize: vertical; margin-top: 11px; border: 1px solid #e3e0dc; outline: none; padding: 9px; font-size: 10px; line-height: 1.5; background: #fcfbfa; }
@@ -416,11 +417,6 @@ h1 {
 .caution {
   background: #2b2410;
   color: #e1bd55;
-}
-
-.tags span {
-  background: #222522;
-  color: #9ba09c;
 }
 
 .command-panel {
