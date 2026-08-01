@@ -2532,7 +2532,10 @@
           "commands": [
             "net group \"domain admins\" myuser /add /domain"
           ],
-          "userCommands": [],
+          "userCommands": [
+            "net rpc user add <new_username> <password> -S <dc_ip> -U <admin_username>", 
+            "net rpc group addmem <domain_group> <new_username> -S <dc_dp> -U <admin_username>"
+        ],
           "tools": [
             "net"
           ],
