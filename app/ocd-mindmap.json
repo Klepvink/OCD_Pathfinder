@@ -2532,8 +2532,8 @@
             {
               "command": "dnscmd.exe /config /serverlevelplugindll <\\\\path\\to\\dll> # need a dnsadmin user",
               "info": {
-                "text": "",
-                "references": []
+                "text": "dnscmd.exe is a command-line interface for managing DNS servers. You can run a specially crafted DLL as a plug-in of the DNS Service.",
+                "references": ["https://lolbas-project.github.io/lolbas/Binaries/Dnscmd/"]
               }
             },
             {
