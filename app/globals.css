@@ -152,7 +152,9 @@ h1 { font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -2.1px; 
 .command-row code { overflow-x: auto; padding: 10px; color: #282725; font-family: var(--font-geist-mono), monospace; font-size: 9px; line-height: 1.45; white-space: pre; scrollbar-width: thin; }
 .command-row code.metasploit-command { display: flex; align-items: center; gap: 8px; }
 .metasploit-logo { width: 14px; height: 14px; flex: 0 0 auto; fill: #8ee8a9; }
+.command-row-actions { display: flex; align-items: stretch; }
 .command-row button { width: 54px; border: 0; border-left: 1px solid #e2dfda; background: #fff; color: #777; font-size: 8px; cursor: pointer; }
+.command-row .command-info-button { width: 32px; color: #8ee8a9; font-family: Georgia, serif; font-size: 12px; font-weight: 700; }
 .command-row button:hover { background: #fff0e2; color: var(--orange-dark); }
 .user-command-panel { border-color: #375342; }
 .user-command-panel .command-head { background: #101a13; border-color: #294033; }
@@ -791,6 +793,42 @@ body::before {
 .credit-list dd span {
   color: #7d847f;
   white-space: nowrap;
+}
+
+.command-information-text {
+  color: #c5cac6 !important;
+  white-space: pre-wrap;
+}
+
+.command-reference-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.command-reference-list li {
+  min-width: 0;
+}
+
+.command-reference-list a {
+  display: block;
+  overflow-wrap: anywhere;
+  border: 1px solid #2f3531;
+  background: #151816;
+  color: #8ee8a9;
+  padding: 10px 11px;
+  font-size: 10px;
+  line-height: 1.45;
+  text-decoration: none;
+}
+
+.command-reference-list a:hover,
+.command-reference-list a:focus-visible {
+  border-color: #59725f;
+  background: #182019;
+  outline: none;
 }
 
 @keyframes terminal-cursor {

@@ -9,12 +9,22 @@ const ocdAdSourceUrl = "https://github.com/Orange-Cyberdefense/ocd-mindmaps/blob
 
 type Status = "todo" | "found" | "clear";
 
+type CommandInfo = {
+  text: string;
+  references: string[];
+};
+
+type CommandEntry = string | {
+  command: string;
+  info?: CommandInfo;
+};
+
 type Check = {
   id: string;
   title: string;
   detail: string;
-  commands?: string[];
-  userCommands?: string[];
+  commands?: CommandEntry[];
+  userCommands?: CommandEntry[];
   tools?: string[];
   source?: string;
   next?: string[];
@@ -34,10 +44,21 @@ const phases = ocdMindmap.phases as Phase[];
 const allChecks = phases.flatMap((phase) => phase.checks);
 const phaseById = Object.fromEntries(phases.map((phase) => [phase.id, phase]));
 const knownCheckIds = new Set(allChecks.map((check) => check.id));
+
+function commandText(entry: CommandEntry) {
+  return typeof entry === "string" ? entry : entry.command;
+}
+
+function populatedCommandInfo(entry: CommandEntry) {
+  if (typeof entry === "string" || !entry.info?.text.trim()) return null;
+  const references = entry.info.references.filter((reference) => /^https?:\/\//i.test(reference.trim()));
+  return references.length > 0 ? { text: entry.info.text.trim(), references } : null;
+}
+
 const commandVariableNames = Array.from(new Set(
   allChecks
     .flatMap((check) => [...(check.commands ?? []), ...(check.userCommands ?? [])])
-    .flatMap((command) => Array.from(command.matchAll(/<([A-Za-z0-9_]+)>/g), (match) => match[1])),
+    .flatMap((command) => Array.from(commandText(command).matchAll(/<([A-Za-z0-9_]+)>/g), (match) => match[1])),
 )).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
 const knownVariableNames = new Set(commandVariableNames);
 const backupFormat = "ad-pathfinder-engagement";
@@ -75,6 +96,7 @@ export default function Home() {
   const [showVariables, setShowVariables] = useState(false);
   const [variableQuery, setVariableQuery] = useState("");
   const [showInformation, setShowInformation] = useState(false);
+  const [activeCommandInfo, setActiveCommandInfo] = useState<CommandInfo | null>(null);
   const [ready, setReady] = useState(false);
   const importInputRef = useRef<HTMLInputElement>(null);
 
@@ -99,13 +121,16 @@ export default function Home() {
   }, [statuses, notes, variables, ready]);
 
   useEffect(() => {
-    if (!showInformation) return;
+    if (!showInformation && !activeCommandInfo) return;
     function closeOnEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") setShowInformation(false);
+      if (event.key === "Escape") {
+        setShowInformation(false);
+        setActiveCommandInfo(null);
+      }
     }
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [showInformation]);
+  }, [showInformation, activeCommandInfo]);
 
   const foundChecks = allChecks.filter((check) => statuses[check.id] === "found");
   const unlocked = useMemo(() => {
@@ -116,7 +141,7 @@ export default function Home() {
   const phase = phaseById[activeId];
   const phaseNumber = String(phases.findIndex((item) => item.id === phase.id) + 1).padStart(2, "0");
   const visibleChecks = phase.checks.filter((check) => {
-    const haystack = `${check.title} ${check.detail} ${(check.tools ?? []).join(" ")} ${(check.commands ?? []).join(" ")} ${(check.userCommands ?? []).join(" ")}`.toLowerCase();
+    const haystack = `${check.title} ${check.detail} ${(check.tools ?? []).join(" ")} ${(check.commands ?? []).map(commandText).join(" ")} ${(check.userCommands ?? []).map(commandText).join(" ")}`.toLowerCase();
     return haystack.includes(query.toLowerCase()) && (showClear || statuses[check.id] !== "clear");
   });
   const completed = allChecks.filter((check) => statuses[check.id] && statuses[check.id] !== "todo").length;
@@ -454,14 +479,19 @@ export default function Home() {
                           <div><strong>Commands from OCD Mindmaps</strong><span>{check.commands.length}</span></div>
                         </div>
                         <div className="commands">
-                          {check.commands.map((command, commandIndex) => {
+                          {check.commands.map((commandEntry, commandIndex) => {
                             const commandId = `${check.id}-${commandIndex}`;
+                            const command = commandText(commandEntry);
+                            const info = populatedCommandInfo(commandEntry);
                             return (
                               <div className="command-row" key={commandId}>
                                 {renderCommand(command)}
-                                <button onClick={() => copyCommand(commandId, command)} aria-label="Copy command">
-                                  {copied === commandId ? "Copied" : "Copy"}
-                                </button>
+                                <div className="command-row-actions">
+                                  {info && <button className="command-info-button" onClick={() => setActiveCommandInfo(info)} aria-label="Show command information">i</button>}
+                                  <button onClick={() => copyCommand(commandId, command)} aria-label="Copy command">
+                                    {copied === commandId ? "Copied" : "Copy"}
+                                  </button>
+                                </div>
                               </div>
                             );
                           })}
@@ -474,14 +504,19 @@ export default function Home() {
                           <div><strong>User-submitted commands</strong><span>{check.userCommands.length}</span></div>
                         </div>
                         <div className="commands">
-                          {check.userCommands.map((command, commandIndex) => {
+                          {check.userCommands.map((commandEntry, commandIndex) => {
                             const commandId = `${check.id}-user-${commandIndex}`;
+                            const command = commandText(commandEntry);
+                            const info = populatedCommandInfo(commandEntry);
                             return (
                               <div className="command-row" key={commandId}>
                                 {renderCommand(command)}
-                                <button onClick={() => copyCommand(commandId, command)} aria-label="Copy user-submitted command">
-                                  {copied === commandId ? "Copied" : "Copy"}
-                                </button>
+                                <div className="command-row-actions">
+                                  {info && <button className="command-info-button" onClick={() => setActiveCommandInfo(info)} aria-label="Show command information">i</button>}
+                                  <button onClick={() => copyCommand(commandId, command)} aria-label="Copy user-submitted command">
+                                    {copied === commandId ? "Copied" : "Copy"}
+                                  </button>
+                                </div>
                               </div>
                             );
                           })}
@@ -545,6 +580,32 @@ export default function Home() {
                   <dd><a href="https://simpleicons.org/?q=metasploit" target="_blank" rel="noreferrer">Simple Icons ↗</a><span>License: CC0</span></dd>
                 </div>
               </dl>
+            </div>
+          </section>
+        </div>
+      )}
+      {activeCommandInfo && (
+        <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setActiveCommandInfo(null)}>
+          <section className="information-modal command-information-modal" role="dialog" aria-modal="true" aria-labelledby="command-information-title">
+            <div className="information-modal-head">
+              <div>
+                <span>Command reference</span>
+                <h2 id="command-information-title">Additional information</h2>
+              </div>
+              <button type="button" onClick={() => setActiveCommandInfo(null)} aria-label="Close command information">×</button>
+            </div>
+            <div className="information-modal-body">
+              <p className="command-information-text">{activeCommandInfo.text}</p>
+              <section>
+                <h3>References</h3>
+                <ul className="command-reference-list">
+                  {activeCommandInfo.references.map((reference, index) => (
+                    <li key={`${reference}-${index}`}>
+                      <a href={reference} target="_blank" rel="noreferrer">{reference} ↗</a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
             </div>
           </section>
         </div>
