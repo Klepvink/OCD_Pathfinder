@@ -120,8 +120,8 @@
             {
               "command": "dig axfr <domain_name> @<name_server>",
               "info": {
-                "text": "",
-                "references": []
+                "text": "An AXFR query is a DNS protocol request used to retrieve all records of a domain from a DNS server. This could potentially show hidden subdomains and (internal) IP addresses.",
+                "references": ["https://hacktricks.wiki/en/network-services-pentesting/pentesting-dns.html"]
               }
             }
           ],
