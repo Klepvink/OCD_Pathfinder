@@ -34,8 +34,27 @@ const phases = ocdMindmap.phases as Phase[];
 const allChecks = phases.flatMap((phase) => phase.checks);
 const phaseById = Object.fromEntries(phases.map((phase) => [phase.id, phase]));
 const knownCheckIds = new Set(allChecks.map((check) => check.id));
+const commandVariableNames = Array.from(new Set(
+  allChecks
+    .flatMap((check) => [...(check.commands ?? []), ...(check.userCommands ?? [])])
+    .flatMap((command) => Array.from(command.matchAll(/<([A-Za-z0-9_]+)>/g), (match) => match[1])),
+)).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+const knownVariableNames = new Set(commandVariableNames);
 const backupFormat = "ad-pathfinder-engagement";
 const backupVersion = 1;
+
+function isSensitiveVariable(name: string) {
+  return /pass(word)?/i.test(name);
+}
+
+function sanitizeVariables(value: unknown) {
+  if (!value || typeof value !== "object") return {};
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>)
+      .filter(([name, variableValue]) => knownVariableNames.has(name) && typeof variableValue === "string")
+      .map(([name, variableValue]) => [name, (variableValue as string).slice(0, 2_000)]),
+  );
+}
 
 function MetasploitLogo() {
   return (
@@ -49,10 +68,12 @@ export default function Home() {
   const [activeId, setActiveId] = useState("no-creds");
   const [statuses, setStatuses] = useState<Record<string, Status>>({});
   const [notes, setNotes] = useState<Record<string, string>>({});
-  const [profile, setProfile] = useState({ domain: "", username: "" });
+  const [variables, setVariables] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState("");
   const [query, setQuery] = useState("");
   const [showClear, setShowClear] = useState(true);
+  const [showVariables, setShowVariables] = useState(false);
+  const [variableQuery, setVariableQuery] = useState("");
   const [showInformation, setShowInformation] = useState(false);
   const [ready, setReady] = useState(false);
   const importInputRef = useRef<HTMLInputElement>(null);
@@ -62,15 +83,20 @@ export default function Home() {
       const saved = JSON.parse(localStorage.getItem("ad-pathfinder-v1") || "{}");
       setStatuses(saved.statuses || {});
       setNotes(saved.notes || {});
-      setProfile(saved.profile || { domain: "", username: "" });
+      const savedVariables = sanitizeVariables(saved.variables);
+      if (saved.profile && typeof saved.profile === "object") {
+        if (!savedVariables.domain && typeof saved.profile.domain === "string") savedVariables.domain = saved.profile.domain;
+        if (!savedVariables.username && typeof saved.profile.username === "string") savedVariables.username = saved.profile.username;
+      }
+      setVariables(savedVariables);
     } finally {
       setReady(true);
     }
   }, []);
 
   useEffect(() => {
-    if (ready) localStorage.setItem("ad-pathfinder-v1", JSON.stringify({ statuses, notes, profile }));
-  }, [statuses, notes, profile, ready]);
+    if (ready) localStorage.setItem("ad-pathfinder-v1", JSON.stringify({ statuses, notes, variables }));
+  }, [statuses, notes, variables, ready]);
 
   useEffect(() => {
     if (!showInformation) return;
@@ -95,6 +121,8 @@ export default function Home() {
   });
   const completed = allChecks.filter((check) => statuses[check.id] && statuses[check.id] !== "todo").length;
   const progress = Math.round((completed / allChecks.length) * 100);
+  const configuredVariableCount = Object.values(variables).filter(Boolean).length;
+  const visibleVariableNames = commandVariableNames.filter((name) => name.toLowerCase().includes(variableQuery.toLowerCase()));
 
   function setStatus(id: string, status: Status) {
     setStatuses((current) => ({ ...current, [id]: current[id] === status ? "todo" : status }));
@@ -104,7 +132,7 @@ export default function Home() {
     if (!window.confirm("Reset every check and note for this engagement?")) return;
     setStatuses({});
     setNotes({});
-    setProfile({ domain: "", username: "" });
+    setVariables({});
   }
 
   function exportEngagement() {
@@ -117,7 +145,7 @@ export default function Home() {
       format: backupFormat,
       version: backupVersion,
       exportedAt: new Date().toISOString(),
-      data: { statuses, notes, profile },
+      data: { statuses, notes, variables },
     };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -151,6 +179,9 @@ export default function Home() {
       const rawStatuses = data.statuses && typeof data.statuses === "object" ? data.statuses as Record<string, unknown> : {};
       const rawNotes = data.notes && typeof data.notes === "object" ? data.notes as Record<string, unknown> : {};
       const rawProfile = data.profile && typeof data.profile === "object" ? data.profile as Record<string, unknown> : {};
+      const importedVariables = sanitizeVariables(data.variables);
+      if (!importedVariables.domain && typeof rawProfile.domain === "string") importedVariables.domain = rawProfile.domain.slice(0, 2_000);
+      if (!importedVariables.username && typeof rawProfile.username === "string") importedVariables.username = rawProfile.username.slice(0, 2_000);
       const importedStatuses = Object.fromEntries(
         Object.entries(rawStatuses).filter(([id, status]) => knownCheckIds.has(id) && ["todo", "found", "clear"].includes(String(status))),
       ) as Record<string, Status>;
@@ -159,18 +190,19 @@ export default function Home() {
           .filter(([id, note]) => knownCheckIds.has(id) && typeof note === "string")
           .map(([id, note]) => [id, (note as string).slice(0, 100_000)]),
       );
-      const importedProfile = {
-        domain: typeof rawProfile.domain === "string" ? rawProfile.domain.slice(0, 500) : "",
-        username: typeof rawProfile.username === "string" ? rawProfile.username.slice(0, 500) : "",
-      };
+      const importedSensitiveValues = Object.entries(importedVariables).filter(([name, value]) => isSensitiveVariable(name) && value);
+
+      if (importedSensitiveValues.length > 0 && !window.confirm(
+        `This backup contains ${importedSensitiveValues.length} password-like variable value${importedSensitiveValues.length === 1 ? "" : "s"}. These values will be stored unencrypted in this browser. Continue?`,
+      )) return;
 
       const accepted = window.confirm(
-        `Import ${Object.keys(importedStatuses).length} check statuses and ${Object.keys(importedNotes).length} notes? This replaces the current engagement data.`,
+        `Import ${Object.keys(importedStatuses).length} check statuses, ${Object.keys(importedNotes).length} notes, and ${Object.values(importedVariables).filter(Boolean).length} variable values? This replaces the current engagement data.`,
       );
       if (!accepted) return;
       setStatuses(importedStatuses);
       setNotes(importedNotes);
-      setProfile(importedProfile);
+      setVariables(importedVariables);
       window.alert("Engagement imported successfully.");
     } catch (error) {
       const message = error instanceof Error ? error.message : "The file could not be read.";
@@ -180,19 +212,32 @@ export default function Home() {
 
   function hydrateCommand(command: string) {
     let value = command;
-    if (profile.domain) {
+    Object.entries(variables).forEach(([name, variableValue]) => {
+      if (variableValue) value = value.replaceAll(`<${name}>`, variableValue);
+    });
+    if (variables.domain) {
       value = value
-        .replaceAll("<domain>", profile.domain)
-        .replaceAll("<target_domain>", profile.domain)
-        .replaceAll("FQDN_DOMAIN", profile.domain);
+        .replaceAll("<domain>", variables.domain)
+        .replaceAll("<target_domain>", variables.domain)
+        .replaceAll("FQDN_DOMAIN", variables.domain);
     }
-    if (profile.username) {
+    if (variables.username) {
       value = value
-        .replaceAll("<user>", profile.username)
-        .replaceAll("<username>", profile.username)
-        .replaceAll("<login>", profile.username);
+        .replaceAll("<user>", variables.username)
+        .replaceAll("<username>", variables.username)
+        .replaceAll("<login>", variables.username);
     }
     return value;
+  }
+
+  function updateVariable(name: string, value: string) {
+    if (value && !variables[name] && isSensitiveVariable(name)) {
+      const accepted = window.confirm(
+        `The value for <${name}> will be stored unencrypted in this browser and included unencrypted in engagement exports. Continue?`,
+      );
+      if (!accepted) return;
+    }
+    setVariables((current) => ({ ...current, [name]: value }));
   }
 
   function withoutMetasploitPrompt(command: string) {
@@ -294,29 +339,51 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="engagement-profile">
-            <div>
+          <div className={`engagement-profile ${showVariables ? "expanded" : ""}`}>
+            <button
+              className="variable-toggle"
+              type="button"
+              onClick={() => setShowVariables((current) => !current)}
+              aria-expanded={showVariables}
+              aria-controls="command-variable-menu"
+            >
               <span className="profile-icon">⌘</span>
-              <div><strong>Command variables</strong><small>Optional · stored on this device only</small></div>
-            </div>
-            <label>
-              <span>DOMAIN</span>
-              <input
-                value={profile.domain}
-                onChange={(event) => setProfile((current) => ({ ...current, domain: event.target.value }))}
-                placeholder="corp.local"
-                autoComplete="off"
-              />
-            </label>
-            <label>
-              <span>USERNAME</span>
-              <input
-                value={profile.username}
-                onChange={(event) => setProfile((current) => ({ ...current, username: event.target.value }))}
-                placeholder="jsmith"
-                autoComplete="off"
-              />
-            </label>
+              <span className="variable-toggle-copy"><strong>Command variables</strong><small>Optional · stored on this device only</small></span>
+              <span className="variable-count">{configuredVariableCount} configured</span>
+              <span className="variable-chevron" aria-hidden="true">⌄</span>
+            </button>
+            {showVariables && (
+              <div className="variable-menu" id="command-variable-menu">
+                <label className="variable-search">
+                  <span>Find a variable</span>
+                  <input
+                    value={variableQuery}
+                    onChange={(event) => setVariableQuery(event.target.value)}
+                    placeholder="Search domain, dc_ip, computer…"
+                    autoComplete="off"
+                  />
+                </label>
+                <div className="variable-grid">
+                  {visibleVariableNames.map((name) => {
+                    const sensitive = isSensitiveVariable(name);
+                    return (
+                      <label className={sensitive ? "sensitive-variable" : ""} key={name}>
+                        <span>&lt;{name}&gt;{sensitive && <em title="Stored unencrypted">⚠</em>}</span>
+                        <input
+                          type={sensitive ? "password" : "text"}
+                          value={variables[name] ?? ""}
+                          onChange={(event) => updateVariable(name, event.target.value)}
+                          placeholder="Not set"
+                          autoComplete="off"
+                          spellCheck={false}
+                        />
+                      </label>
+                    );
+                  })}
+                </div>
+                {visibleVariableNames.length === 0 && <p className="variable-empty">No command variables match this search.</p>}
+              </div>
+            )}
           </div>
 
           {foundChecks.some((check) => check.next?.length) && (
