@@ -154,8 +154,8 @@
             {
               "command": "enum4linux-ng.py -a -u '' -p '' <ip>",
               "info": {
-                "text": "",
-                "references": []
+                "text": "enum4linux can be used to enumerate information from Windows and Samba systems. This information can be used for further enumeration or exploitation.",
+                "references": ["https://github.com/cddmp/enum4linux-ng","https://wadcoms.github.io/wadcoms/enum4linux-ng/"]
               }
             },
             {
@@ -335,8 +335,8 @@
             {
               "command": "petitpotam.py -d <domain> <listener> <target>",
               "info": {
-                "text": "",
-                "references": []
+                "text": "PetitPotam is a tool which can be used to coerce Windows hosts to authenticate to other machines via MS-EFSRPC EfsRpcOpenFileRaw.",
+                "references": ["https://github.com/topotam/PetitPotam","https://www.truesec.com/hub/blog/from-stranger-to-da-using-petitpotam-to-ntlm-relay-to-active-directory","https://wadcoms.github.io/wadcoms/PetitPotam/"]
               }
             }
           ],
@@ -1833,8 +1833,8 @@
             {
               "command": "winPEASany_ofs.exe",
               "info": {
-                "text": "",
-                "references": []
+                "text": "WinPEAS is a script that will search for possible paths to escalate privileges on Windows hosts.",
+                "references": ["https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/winPEAS","https://book.hacktricks.xyz/windows/windows-local-privilege-escalation", "https://wadcoms.github.io/wadcoms/winPEAS/"]
               }
             },
             {
