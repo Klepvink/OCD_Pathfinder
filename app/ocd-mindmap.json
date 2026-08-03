@@ -512,8 +512,8 @@
             {
               "command": "kerbrute passwordspray -d <domain> <users.txt> <password>",
               "info": {
-                "text": "",
-                "references": []
+                "text": "Kerbrute bruteforces and enumerates valid Active Directory accounts through Kerberos Pre-Authentication.",
+                "references": ["https://github.com/ropnop/kerbrute","https://wadcoms.github.io/wadcoms/Kerbrute-PasswordSpray/"]
               }
             }
           ],
@@ -1329,8 +1329,8 @@
             {
               "command": "GetADUsers.py -all -dc-ip <dc_ip> <domain>/<username>",
               "info": {
-                "text": "",
-                "references": []
+                "text": "Impacket’s GetADUsers.py will attempt to gather data about the domain’s users and their corresponding email addresses.",
+                "references": ["https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetADUsers.py","https://wadcoms.github.io/wadcoms/Impacket-GetADUsers/"]
               }
             },
             {
@@ -1572,8 +1572,8 @@
             {
               "command": "GetUserSPNs.py -request -dc-ip <dc_ip> <domain>/<user>:<password>",
               "info": {
-                "text": "",
-                "references": []
+                "text": "Impacket’s GetUserSPNs.py will attempt to fetch Service Principal Names that are associated with normal user accounts.",
+                "references": ["https://www.tarlogic.com/en/blog/how-to-attack-kerberos/","https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py", "https://wadcoms.github.io/wadcoms/Impacket-GetUserSPNs/"]
               }
             },
             {
