@@ -2255,8 +2255,8 @@
             {
               "command": "pywhisker.py -d \"FQDN_DOMAIN\" -u \"user1\" -p \"CERTIFICATE_PASSWORD\" --target \"TARGET_SAMNAME\" --action \"list\"",
               "info": {
-                "text": "",
-                "references": []
+                "text": "pyWhisker is a tool allowing users to manipulate the msDS-KeyCredentialLink attribute of a target user/computer to obtain full control over that object.",
+                "references": ["https://github.com/shutdownrepo/pywhisker","https://wadcoms.github.io/wadcoms/PyWhisker/"]
               }
             }
           ],
@@ -4890,8 +4890,8 @@
             {
               "command": "sharphound.exe -c trusts -d <domain>",
               "info": {
-                "text": "",
-                "references": []
+                "text": "SharpHound.exe is the official data collector for BloodHound, and can be used to collect data from domain controllers and domain-joined Windows systems.",
+                "references": ["https://bloodhound.specterops.io/collect-data/ce-collection/sharphound#sharphound-community-edition", "https://github.com/SpecterOps/SharpHound", "https://wadcoms.github.io/wadcoms/SharpHound-LDAP/"]
               }
             },
             {
