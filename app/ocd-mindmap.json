@@ -1875,7 +1875,6 @@
                 "text": "WinPEAS is a script that will search for possible paths to escalate privileges on Windows hosts.",
                 "references": [
                   "https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/winPEAS",
-                  "https://book.hacktricks.xyz/windows/windows-local-privilege-escalation",
                   "https://wadcoms.github.io/wadcoms/winPEAS/"
                 ]
               }
