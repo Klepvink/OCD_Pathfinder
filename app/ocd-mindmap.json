@@ -121,7 +121,9 @@
               "command": "dig axfr <domain_name> @<name_server>",
               "info": {
                 "text": "An AXFR query is a DNS protocol request used to retrieve all records of a domain from a DNS server. This could potentially show hidden subdomains and (internal) IP addresses.",
-                "references": ["https://hacktricks.wiki/en/network-services-pentesting/pentesting-dns.html"]
+                "references": [
+                  "https://hacktricks.wiki/en/network-services-pentesting/pentesting-dns.html"
+                ]
               }
             }
           ],
@@ -155,7 +157,10 @@
               "command": "enum4linux-ng.py -a -u '' -p '' <ip>",
               "info": {
                 "text": "enum4linux can be used to enumerate information from Windows and Samba systems. This information can be used for further enumeration or exploitation.",
-                "references": ["https://github.com/cddmp/enum4linux-ng","https://wadcoms.github.io/wadcoms/enum4linux-ng/"]
+                "references": [
+                  "https://github.com/cddmp/enum4linux-ng",
+                  "https://wadcoms.github.io/wadcoms/enum4linux-ng/"
+                ]
               }
             },
             {
@@ -336,7 +341,11 @@
               "command": "petitpotam.py -d <domain> <listener> <target>",
               "info": {
                 "text": "PetitPotam is a tool which can be used to coerce Windows hosts to authenticate to other machines via MS-EFSRPC EfsRpcOpenFileRaw.",
-                "references": ["https://github.com/topotam/PetitPotam","https://www.truesec.com/hub/blog/from-stranger-to-da-using-petitpotam-to-ntlm-relay-to-active-directory","https://wadcoms.github.io/wadcoms/PetitPotam/"]
+                "references": [
+                  "https://github.com/topotam/PetitPotam",
+                  "https://www.truesec.com/hub/blog/from-stranger-to-da-using-petitpotam-to-ntlm-relay-to-active-directory",
+                  "https://wadcoms.github.io/wadcoms/PetitPotam/"
+                ]
               }
             }
           ],
@@ -513,7 +522,10 @@
               "command": "kerbrute passwordspray -d <domain> <users.txt> <password>",
               "info": {
                 "text": "Kerbrute bruteforces and enumerates valid Active Directory accounts through Kerberos Pre-Authentication.",
-                "references": ["https://github.com/ropnop/kerbrute","https://wadcoms.github.io/wadcoms/Kerbrute-PasswordSpray/"]
+                "references": [
+                  "https://github.com/ropnop/kerbrute",
+                  "https://wadcoms.github.io/wadcoms/Kerbrute-PasswordSpray/"
+                ]
               }
             }
           ],
@@ -632,7 +644,27 @@
               }
             }
           ],
-          "userCommands": [],
+          "userCommands": [
+            {
+              "command": "zerologon-tester.py '<dc_netbios_name>' '<ip>'",
+              "info": {
+                "text": "A Python script that tests if a hosts is vulnerable for the Zerologon exploit (CVE-2020-1472). Please note that the zerologon exploit introduces severe operational instability to the target network.",
+                "references": [
+                  "https://github.com/bvcyber/CVE-2020-1472",
+                  "https://cybersecurity.bureauveritas.com/nl/blog/zero-logon"
+                ]
+              }
+            },
+            {
+              "command": "nxc smb <ip> -u '<user>' -p '<password>' -M zerologon",
+              "info": {
+                "text": "NetExec module that tests if a hosts is vulnerable for the Zerologon exploit (CVE-2020-1472). Please note that the zerologon exploit introduces severe operational instability to the target network.",
+                "references": [
+                  "https://www.netexec.wiki/smb-protocol/scan-for-vulnerabilities"
+                ]
+              }
+            }
+          ],
           "tools": [
             "zerologon-scan",
             "cve-2020-1472-exploit.py"
@@ -1330,7 +1362,10 @@
               "command": "GetADUsers.py -all -dc-ip <dc_ip> <domain>/<username>",
               "info": {
                 "text": "Impacket’s GetADUsers.py will attempt to gather data about the domain’s users and their corresponding email addresses.",
-                "references": ["https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetADUsers.py","https://wadcoms.github.io/wadcoms/Impacket-GetADUsers/"]
+                "references": [
+                  "https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetADUsers.py",
+                  "https://wadcoms.github.io/wadcoms/Impacket-GetADUsers/"
+                ]
               }
             },
             {
@@ -1573,7 +1608,11 @@
               "command": "GetUserSPNs.py -request -dc-ip <dc_ip> <domain>/<user>:<password>",
               "info": {
                 "text": "Impacket’s GetUserSPNs.py will attempt to fetch Service Principal Names that are associated with normal user accounts.",
-                "references": ["https://www.tarlogic.com/en/blog/how-to-attack-kerberos/","https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py", "https://wadcoms.github.io/wadcoms/Impacket-GetUserSPNs/"]
+                "references": [
+                  "https://www.tarlogic.com/en/blog/how-to-attack-kerberos/",
+                  "https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py",
+                  "https://wadcoms.github.io/wadcoms/Impacket-GetUserSPNs/"
+                ]
               }
             },
             {
@@ -1834,7 +1873,11 @@
               "command": "winPEASany_ofs.exe",
               "info": {
                 "text": "WinPEAS is a script that will search for possible paths to escalate privileges on Windows hosts.",
-                "references": ["https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/winPEAS","https://book.hacktricks.xyz/windows/windows-local-privilege-escalation", "https://wadcoms.github.io/wadcoms/winPEAS/"]
+                "references": [
+                  "https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/winPEAS",
+                  "https://book.hacktricks.xyz/windows/windows-local-privilege-escalation",
+                  "https://wadcoms.github.io/wadcoms/winPEAS/"
+                ]
               }
             },
             {
@@ -2256,7 +2299,10 @@
               "command": "pywhisker.py -d \"FQDN_DOMAIN\" -u \"user1\" -p \"CERTIFICATE_PASSWORD\" --target \"TARGET_SAMNAME\" --action \"list\"",
               "info": {
                 "text": "pyWhisker is a tool allowing users to manipulate the msDS-KeyCredentialLink attribute of a target user/computer to obtain full control over that object.",
-                "references": ["https://github.com/shutdownrepo/pywhisker","https://wadcoms.github.io/wadcoms/PyWhisker/"]
+                "references": [
+                  "https://github.com/shutdownrepo/pywhisker",
+                  "https://wadcoms.github.io/wadcoms/PyWhisker/"
+                ]
               }
             }
           ],
@@ -4891,7 +4937,11 @@
               "command": "sharphound.exe -c trusts -d <domain>",
               "info": {
                 "text": "SharpHound.exe is the official data collector for BloodHound, and can be used to collect data from domain controllers and domain-joined Windows systems.",
-                "references": ["https://bloodhound.specterops.io/collect-data/ce-collection/sharphound#sharphound-community-edition", "https://github.com/SpecterOps/SharpHound", "https://wadcoms.github.io/wadcoms/SharpHound-LDAP/"]
+                "references": [
+                  "https://bloodhound.specterops.io/collect-data/ce-collection/sharphound#sharphound-community-edition",
+                  "https://github.com/SpecterOps/SharpHound",
+                  "https://wadcoms.github.io/wadcoms/SharpHound-LDAP/"
+                ]
               }
             },
             {
