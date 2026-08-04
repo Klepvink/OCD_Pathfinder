@@ -2003,8 +2003,8 @@
             {
               "command": "targetedKerberoast.py -d <domain> -u <user> -p <pass>",
               "info": {
-                "text": "",
-                "references": []
+                "text": "targetedKerberoast.py tries to set an SPN for each user without SPNs, print the \"kerberoast\" hash, and delete the temporary SPN set for that operation.",
+                "references": ["https://github.com/ShutdownRepo/targetedKerberoast", "https://www.thehacker.recipes/ad/movement/dacl/targeted-kerberoasting"]
               }
             }
           ],
