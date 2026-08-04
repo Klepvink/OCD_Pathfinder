@@ -10,6 +10,33 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Replacing the mindmap
+
+Replace `app/ocd-mindmap.json`, then verify it:
+
+```bash
+npm run validate:mindmap
+npm run build
+```
+
+Only a `phases` array is required. Missing IDs, colors, source keys, check details, command arrays, and navigation arrays receive safe defaults. Commands can be plain strings or objects with optional information:
+
+```json
+{
+  "command": "tool <target>",
+  "info": {
+    "text": "",
+    "references": []
+  }
+}
+```
+
+To regenerate the JSON from a cloned OCD Mindmaps AD directory while preserving matching user commands and command information:
+
+```bash
+npm run import:ocd -- /path/to/ocd-mindmaps/excalimap/mindmap/ad
+```
+
 To verify and run the production build locally:
 
 ```bash

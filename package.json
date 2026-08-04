@@ -9,7 +9,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "validate:mindmap": "node scripts/validate-mindmap.mjs",
+    "import:ocd": "node scripts/import-ocd.mjs"
   },
   "dependencies": {
     "next": "16.2.6",

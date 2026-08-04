@@ -3,45 +3,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import ocdMindmap from "./ocd-mindmap.json";
+import { normalizeMindmap, type CommandEntry, type CommandInfo } from "./mindmap";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const ocdAdSourceUrl = "https://github.com/Orange-Cyberdefense/ocd-mindmaps/blob/main/excalimap/mindmap/ad";
 
 type Status = "todo" | "found" | "clear";
 
-type CommandInfo = {
-  text: string;
-  references: string[];
-};
-
-type CommandEntry = string | {
-  command: string;
-  info?: CommandInfo;
-};
-
-type Check = {
-  id: string;
-  title: string;
-  detail: string;
-  commands?: CommandEntry[];
-  userCommands?: CommandEntry[];
-  tools?: string[];
-  source?: string;
-  next?: string[];
-  caution?: string;
-};
-
-type Phase = {
-  id: string;
-  sourceKey: string;
-  title: string;
-  description: string;
-  color: string;
-  checks: Check[];
-};
-
-const phases = ocdMindmap.phases as Phase[];
+const phases = normalizeMindmap(ocdMindmap);
 const allChecks = phases.flatMap((phase) => phase.checks);
+const initialPhaseId = phases[0].id;
 const phaseById = Object.fromEntries(phases.map((phase) => [phase.id, phase]));
 const knownCheckIds = new Set(allChecks.map((check) => check.id));
 
@@ -86,7 +57,7 @@ function MetasploitLogo() {
 }
 
 export default function Home() {
-  const [activeId, setActiveId] = useState("no-creds");
+  const [activeId, setActiveId] = useState(initialPhaseId);
   const [statuses, setStatuses] = useState<Record<string, Status>>({});
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [variables, setVariables] = useState<Record<string, string>>({});
@@ -134,14 +105,14 @@ export default function Home() {
 
   const foundChecks = allChecks.filter((check) => statuses[check.id] === "found");
   const unlocked = useMemo(() => {
-    const ids = new Set(["no-creds"]);
+    const ids = new Set([initialPhaseId]);
     foundChecks.forEach((check) => check.next?.forEach((id) => ids.add(id)));
     return ids;
   }, [foundChecks]);
   const phase = phaseById[activeId];
   const phaseNumber = String(phases.findIndex((item) => item.id === phase.id) + 1).padStart(2, "0");
   const visibleChecks = phase.checks.filter((check) => {
-    const haystack = `${check.title} ${check.detail} ${(check.tools ?? []).join(" ")} ${(check.commands ?? []).map(commandText).join(" ")} ${(check.userCommands ?? []).map(commandText).join(" ")}`.toLowerCase();
+    const haystack = `${check.title} ${check.detail} ${check.commands.map(commandText).join(" ")} ${check.userCommands.map(commandText).join(" ")}`.toLowerCase();
     return haystack.includes(query.toLowerCase()) && (showClear || statuses[check.id] !== "clear");
   });
   const completed = allChecks.filter((check) => statuses[check.id] && statuses[check.id] !== "todo").length;
@@ -415,7 +386,7 @@ export default function Home() {
             <div className="next-steps">
               <div><span className="pulse-dot" /><strong>Suggested next phases</strong><small>Unlocked by confirmed findings</small></div>
               <div className="next-chips">
-                {[...unlocked].filter((id) => !["no-creds", activeId].includes(id)).slice(0, 5).map((id) => (
+                {[...unlocked].filter((id) => ![initialPhaseId, activeId].includes(id)).slice(0, 5).map((id) => (
                   <button key={id} onClick={() => setActiveId(id)} style={{ "--chip-color": phaseById[id].color } as React.CSSProperties}>
                     {phaseById[id].title}<span>→</span>
                   </button>

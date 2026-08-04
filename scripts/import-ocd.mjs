@@ -6,12 +6,18 @@ const sourceDir =
 const output = process.argv[3] || "app/ocd-mindmap.json";
 
 const existingUserCommands = new Map();
+const existingCommandInfo = new Map();
+const commandText = (entry) => typeof entry === "string" ? entry : entry?.command;
 try {
   const existingData = JSON.parse(await readFile(output, "utf8"));
   for (const phase of existingData.phases ?? []) {
     for (const check of phase.checks ?? []) {
       if (Array.isArray(check.userCommands)) {
         existingUserCommands.set(check.id, check.userCommands);
+      }
+      for (const entry of check.commands ?? []) {
+        const value = commandText(entry);
+        if (value && entry?.info) existingCommandInfo.set(`${check.id}\0${value}`, entry.info);
       }
     }
   }
@@ -25,24 +31,13 @@ const order = [
   "adcs", "sccm", "admin", "lat_move", "dom_admin", "trusts", "persistence",
 ];
 
-const meta = {
-  no_creds: ["01 · Initial access", "#f59e0b"],
-  valid_user: ["02 · Identity", "#f97316"],
-  low_hanging: ["03 · Quick compromise", "#eab308"],
-  mitm: ["04 · Network position", "#ef4444"],
-  crack_hash: ["05 · Credential recovery", "#ec4899"],
-  authenticated: ["06 · Domain context", "#8b5cf6"],
-  low_access: ["07 · Host escalation", "#22c55e"],
-  know_vuln_auth: ["08 · Known vulnerabilities", "#f43f5e"],
-  acl: ["09 · Directory permissions", "#06b6d4"],
-  delegation: ["10 · Ticket paths", "#3b82f6"],
-  adcs: ["11 · Certificate paths", "#14b8a6"],
-  sccm: ["12 · Management plane", "#84cc16"],
-  admin: ["13 · Credential access", "#a855f7"],
-  lat_move: ["14 · Expansion", "#6366f1"],
-  dom_admin: ["15 · Domain control", "#dc2626"],
-  trusts: ["16 · Cross-boundary", "#0ea5e9"],
-  persistence: ["17 · Post-exploitation", "#64748b"],
+const colors = {
+  no_creds: "#f59e0b", valid_user: "#f97316", low_hanging: "#eab308",
+  mitm: "#ef4444", crack_hash: "#ec4899", authenticated: "#8b5cf6",
+  low_access: "#22c55e", know_vuln_auth: "#f43f5e", acl: "#06b6d4",
+  delegation: "#3b82f6", adcs: "#14b8a6", sccm: "#84cc16",
+  admin: "#a855f7", lat_move: "#6366f1", dom_admin: "#dc2626",
+  trusts: "#0ea5e9", persistence: "#64748b",
 };
 
 const slug = (value) =>
@@ -76,11 +71,6 @@ function extractTargets(line) {
     .filter(Boolean);
 }
 
-function toolFrom(command) {
-  const normalized = command.replace(/^(sudo|proxychains)\s+/, "").trim();
-  return normalized.split(/\s+/)[0].replace(/^\.\\/, "").replace(/^.*\//, "");
-}
-
 async function parseFile(file) {
   const key = basename(file, ".md");
   const lines = (await readFile(join(sourceDir, file), "utf8")).split(/\r?\n/);
@@ -89,9 +79,7 @@ async function parseFile(file) {
     id: key.replaceAll("_", "-"),
     sourceKey: key,
     title,
-    eyebrow: meta[key]?.[0] || "Reference",
-    color: meta[key]?.[1] || "#64748b",
-    description: "Original Orange Cyberdefense v2025.03 checks and commands.",
+    color: colors[key] || "#64748b",
     checks: [],
   };
   let current = null;
@@ -105,9 +93,7 @@ async function parseFile(file) {
         detail: "",
         commands: [],
         userCommands: existingUserCommands.get(checkId) ?? [],
-        tools: [],
         nextLabels: extractTargets(raw),
-        source: file,
       };
       phase.checks.push(current);
       continue;
@@ -118,9 +104,12 @@ async function parseFile(file) {
     }
     const commands = extractCommands(line);
     for (const command of commands) {
-      if (!current.commands.includes(command)) current.commands.push(command);
-      const tool = toolFrom(command);
-      if (tool && !current.tools.includes(tool)) current.tools.push(tool);
+      if (!current.commands.some((entry) => commandText(entry) === command)) {
+        current.commands.push({
+          command,
+          info: existingCommandInfo.get(`${current.id}\0${command}`) ?? { text: "", references: [] },
+        });
+      }
     }
     if (commands.length === 0 && /^\s*-\s+/.test(line)) {
       const text = clean(line.replace(/^\s*-\s+/, ""));
@@ -211,12 +200,7 @@ for (const phase of phases) {
 await writeFile(
   output,
   `${JSON.stringify(
-    {
-      source: "Orange-Cyberdefense/ocd-mindmaps",
-      version: "2025.03",
-      generatedAt: new Date().toISOString(),
-      phases,
-    },
+    { phases },
     null,
     2,
   )}\n`,
