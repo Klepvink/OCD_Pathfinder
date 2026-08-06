@@ -10,6 +10,14 @@ const ocdAdSourceUrl = "https://github.com/Orange-Cyberdefense/ocd-mindmaps/blob
 
 type Status = "todo" | "found" | "clear";
 
+type AttackConnector = {
+  id: string;
+  path: string;
+  originX: number;
+  originY: number;
+  color: string;
+};
+
 const phases = normalizeMindmap(ocdMindmap);
 const allChecks = phases.flatMap((phase) => phase.checks);
 const initialPhaseId = phases[0].id;
@@ -64,12 +72,19 @@ export default function Home() {
   const [copied, setCopied] = useState("");
   const [query, setQuery] = useState("");
   const [showClear, setShowClear] = useState(true);
+  const [showAttackPaths, setShowAttackPaths] = useState(true);
   const [showVariables, setShowVariables] = useState(false);
   const [variableQuery, setVariableQuery] = useState("");
   const [showInformation, setShowInformation] = useState(false);
   const [activeCommandInfo, setActiveCommandInfo] = useState<CommandInfo | null>(null);
+  const [attackConnectors, setAttackConnectors] = useState<AttackConnector[]>([]);
   const [ready, setReady] = useState(false);
   const importInputRef = useRef<HTMLInputElement>(null);
+  const phaseButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const checkCardRefs = useRef<Record<string, HTMLElement | null>>({});
+  const contentRef = useRef<HTMLElement>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
+  const phase = phaseById[activeId];
 
   useEffect(() => {
     try {
@@ -103,13 +118,66 @@ export default function Home() {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [showInformation, activeCommandInfo]);
 
+  useEffect(() => {
+    let frame = 0;
+    function updateConnectors() {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        if (!showAttackPaths || window.innerWidth <= 760) {
+          setAttackConnectors([]);
+          return;
+        }
+
+        const nextConnectors: AttackConnector[] = [];
+        for (const check of phase.checks) {
+          if (statuses[check.id] !== "found" || check.next.length === 0) continue;
+          const card = checkCardRefs.current[check.id];
+          if (!card) continue;
+          const cardRect = card.getBoundingClientRect();
+
+          const originX = cardRect.left;
+          const originY = cardRect.top + Math.min(32, cardRect.height / 2);
+          for (const targetId of check.next) {
+            const target = phaseButtonRefs.current[targetId];
+            if (!target) continue;
+            const targetRect = target.getBoundingClientRect();
+            const targetX = targetRect.right + 4;
+            const targetY = targetRect.top + targetRect.height / 2;
+            const bend = Math.max(24, (originX - targetX) * .45);
+            nextConnectors.push({
+              id: `${check.id}-${targetId}`,
+              path: `M ${originX} ${originY} C ${originX - bend} ${originY}, ${targetX + bend} ${targetY}, ${targetX} ${targetY}`,
+              originX,
+              originY,
+              color: "#ff7900",
+            });
+          }
+        }
+        setAttackConnectors(nextConnectors);
+      });
+    }
+
+    updateConnectors();
+    window.addEventListener("resize", updateConnectors);
+    window.addEventListener("scroll", updateConnectors, true);
+    const observer = new ResizeObserver(updateConnectors);
+    if (contentRef.current) observer.observe(contentRef.current);
+    if (sidebarRef.current) observer.observe(sidebarRef.current);
+    Object.values(checkCardRefs.current).forEach((card) => card && observer.observe(card));
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", updateConnectors);
+      window.removeEventListener("scroll", updateConnectors, true);
+      observer.disconnect();
+    };
+  }, [activeId, phase, query, showAttackPaths, showClear, statuses]);
+
   const foundChecks = allChecks.filter((check) => statuses[check.id] === "found");
   const unlocked = useMemo(() => {
     const ids = new Set([initialPhaseId]);
     foundChecks.forEach((check) => check.next?.forEach((id) => ids.add(id)));
     return ids;
   }, [foundChecks]);
-  const phase = phaseById[activeId];
   const phaseNumber = String(phases.findIndex((item) => item.id === phase.id) + 1).padStart(2, "0");
   const visibleChecks = phase.checks.filter((check) => {
     const haystack = `${check.title} ${check.detail} ${check.commands.map(commandText).join(" ")} ${check.userCommands.map(commandText).join(" ")}`.toLowerCase();
@@ -259,7 +327,7 @@ export default function Home() {
   return (
     <main className="app-shell">
       <section className="workspace">
-        <aside className="sidebar">
+        <aside className="sidebar" ref={sidebarRef}>
           <div className="sidebar-heading">
             <p>Attack path</p>
             <span>{unlocked.size} phases open</span>
@@ -271,6 +339,7 @@ export default function Home() {
               return (
                 <button
                   key={item.id}
+                  ref={(element) => { phaseButtonRefs.current[item.id] = element; }}
                   className={`nav-item ${activeId === item.id ? "active" : ""} ${isOpen ? "" : "locked"}`}
                   onClick={() => setActiveId(item.id)}
                 >
@@ -290,13 +359,22 @@ export default function Home() {
           </div>
         </aside>
 
-        <section className="content">
+        <section className="content" ref={contentRef}>
           <div className="operator-bar">
             <div className="operator-actions">
               <label className="search compact-search">
                 <span>⌕</span>
                 <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search checks, tools, protocols…" aria-label="Search checks" />
               </label>
+              <button
+                className={`icon-button compact-reset path-toggle ${showAttackPaths ? "active" : ""}`}
+                type="button"
+                onClick={() => setShowAttackPaths((current) => !current)}
+                aria-pressed={showAttackPaths}
+                title={`${showAttackPaths ? "Hide" : "Show"} attack path connectors`}
+              >
+                ⌁ <span>PATHS</span>
+              </button>
               <button className="icon-button compact-reset" onClick={exportEngagement} title="Export engagement">↓ <span>EXPORT</span></button>
               <button className="icon-button compact-reset" onClick={requestImport} title="Import engagement">↑ <span>IMPORT</span></button>
               <input
@@ -407,7 +485,11 @@ export default function Home() {
             {visibleChecks.map((check, index) => {
               const status = statuses[check.id] || "todo";
               return (
-                <article className={`check-card status-${status}`} key={check.id}>
+                <article
+                  className={`check-card status-${status}`}
+                  key={check.id}
+                  ref={(element) => { checkCardRefs.current[check.id] = element; }}
+                >
                   <div className="check-index">{String(index + 1).padStart(2, "0")}</div>
                   <div className="check-body">
                     <div className="check-title-row">
@@ -511,6 +593,16 @@ export default function Home() {
         </section>
 
       </section>
+      {attackConnectors.length > 0 && (
+        <svg className="attack-connector-layer" aria-hidden="true">
+          {attackConnectors.map((connector) => (
+            <g key={connector.id}>
+              <path className="attack-connector-path" d={connector.path} stroke={connector.color} />
+              <circle className="attack-connector-origin" cx={connector.originX} cy={connector.originY} r="3" fill={connector.color} />
+            </g>
+          ))}
+        </svg>
+      )}
       {showInformation && (
         <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setShowInformation(false)}>
           <section className="information-modal" role="dialog" aria-modal="true" aria-labelledby="information-title">
