@@ -126,31 +126,79 @@ export default function Home() {
 
   useEffect(() => {
     let frame = 0;
+    let layoutDirty = true;
+    let targetsDirty = true;
+    let workspaceDocumentLeft = 0;
+    let workspaceDocumentTop = 0;
+    const origins = new Map<string, { x: number; y: number }>();
+    const targets = new Map<string, { right: number; centerY: number }>();
     const snap = (value: number) => Math.round(value * 2) / 2;
+
+    function measureLayout() {
+      const workspace = workspaceRef.current;
+      if (!workspace) return;
+      const workspaceRect = workspace.getBoundingClientRect();
+      workspaceDocumentLeft = workspaceRect.left + window.scrollX;
+      workspaceDocumentTop = workspaceRect.top + window.scrollY;
+      origins.clear();
+
+      for (const connector of attackConnectors) {
+        if (origins.has(connector.checkId)) continue;
+        const card = checkCardRefs.current[connector.checkId];
+        if (!card) continue;
+        const cardRect = card.getBoundingClientRect();
+        origins.set(connector.checkId, {
+          x: snap(cardRect.left + window.scrollX - workspaceDocumentLeft),
+          y: snap(cardRect.top + window.scrollY - workspaceDocumentTop + Math.min(32, cardRect.height / 2)),
+        });
+      }
+    }
+
+    function measureTargets() {
+      targets.clear();
+      for (const connector of attackConnectors) {
+        if (targets.has(connector.targetId)) continue;
+        const target = phaseButtonRefs.current[connector.targetId];
+        if (!target) continue;
+        const targetRect = target.getBoundingClientRect();
+        targets.set(connector.targetId, {
+          right: targetRect.right,
+          centerY: targetRect.top + targetRect.height / 2,
+        });
+      }
+    }
 
     function drawConnectors() {
       frame = 0;
-      const workspace = workspaceRef.current;
-      if (!workspace || window.innerWidth <= 760) return;
-      const workspaceRect = workspace.getBoundingClientRect();
+      if (window.innerWidth <= 760) return;
+      if (layoutDirty) {
+        measureLayout();
+        measureTargets();
+        layoutDirty = false;
+        targetsDirty = false;
+      } else if (targetsDirty) {
+        measureTargets();
+        targetsDirty = false;
+      }
+
+      const workspaceViewportLeft = workspaceDocumentLeft - window.scrollX;
+      const workspaceViewportTop = workspaceDocumentTop - window.scrollY;
 
       for (const connector of attackConnectors) {
         const path = connectorPathRefs.current[connector.id];
         const origin = connectorOriginRefs.current[connector.id];
-        const card = checkCardRefs.current[connector.checkId];
-        const target = phaseButtonRefs.current[connector.targetId];
-        if (!path || !origin || !card || !target) {
+        const originPoint = origins.get(connector.checkId);
+        const targetPoint = targets.get(connector.targetId);
+        if (!path || !origin || !originPoint || !targetPoint) {
           if (path) path.style.visibility = "hidden";
           if (origin) origin.style.visibility = "hidden";
           continue;
         }
 
-        const cardRect = card.getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-        const originX = snap(cardRect.left - workspaceRect.left);
-        const originY = snap(cardRect.top - workspaceRect.top + Math.min(32, cardRect.height / 2));
-        const targetX = snap(targetRect.right - workspaceRect.left + 4);
-        const targetY = snap(targetRect.top - workspaceRect.top + targetRect.height / 2);
+        const originX = originPoint.x;
+        const originY = originPoint.y;
+        const targetX = snap(targetPoint.right - workspaceViewportLeft + 4);
+        const targetY = snap(targetPoint.centerY - workspaceViewportTop);
         const bend = snap(Math.max(24, (originX - targetX) * .45));
         path.setAttribute("d", `M ${originX} ${originY} C ${originX - bend} ${originY}, ${targetX + bend} ${targetY}, ${targetX} ${targetY}`);
         origin.setAttribute("cx", String(originX));
@@ -164,18 +212,31 @@ export default function Home() {
       if (!frame) frame = window.requestAnimationFrame(drawConnectors);
     }
 
-    updateConnectors();
-    window.addEventListener("resize", updateConnectors);
-    window.addEventListener("scroll", updateConnectors, true);
-    const observer = new ResizeObserver(updateConnectors);
+    function updateLayout() {
+      layoutDirty = true;
+      updateConnectors();
+    }
+
+    function updateTargets() {
+      targetsDirty = true;
+      updateConnectors();
+    }
+
+    updateLayout();
+    window.addEventListener("resize", updateLayout);
+    window.addEventListener("scroll", updateConnectors, { passive: true });
+    const sidebar = sidebarRef.current;
+    sidebar?.addEventListener("scroll", updateTargets, { passive: true });
+    const observer = new ResizeObserver(updateLayout);
     if (workspaceRef.current) observer.observe(workspaceRef.current);
     if (contentRef.current) observer.observe(contentRef.current);
     if (sidebarRef.current) observer.observe(sidebarRef.current);
     Object.values(checkCardRefs.current).forEach((card) => card && observer.observe(card));
     return () => {
       window.cancelAnimationFrame(frame);
-      window.removeEventListener("resize", updateConnectors);
-      window.removeEventListener("scroll", updateConnectors, true);
+      window.removeEventListener("resize", updateLayout);
+      window.removeEventListener("scroll", updateConnectors);
+      sidebar?.removeEventListener("scroll", updateTargets);
       observer.disconnect();
     };
   }, [attackConnectors, query, showClear]);
