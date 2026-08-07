@@ -82,6 +82,7 @@ export default function Home() {
   const importInputRef = useRef<HTMLInputElement>(null);
   const phaseButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const checkCardRefs = useRef<Record<string, HTMLElement | null>>({});
+  const workspaceRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
   const phase = phaseById[activeId];
@@ -128,6 +129,9 @@ export default function Home() {
           return;
         }
 
+        const workspace = workspaceRef.current;
+        if (!workspace) return;
+        const workspaceRect = workspace.getBoundingClientRect();
         const nextConnectors: AttackConnector[] = [];
         for (const check of phase.checks) {
           if (statuses[check.id] !== "found" || check.next.length === 0) continue;
@@ -135,14 +139,14 @@ export default function Home() {
           if (!card) continue;
           const cardRect = card.getBoundingClientRect();
 
-          const originX = cardRect.left;
-          const originY = cardRect.top + Math.min(32, cardRect.height / 2);
+          const originX = cardRect.left - workspaceRect.left;
+          const originY = cardRect.top - workspaceRect.top + Math.min(32, cardRect.height / 2);
           for (const targetId of check.next) {
             const target = phaseButtonRefs.current[targetId];
             if (!target) continue;
             const targetRect = target.getBoundingClientRect();
-            const targetX = targetRect.right + 4;
-            const targetY = targetRect.top + targetRect.height / 2;
+            const targetX = targetRect.right - workspaceRect.left + 4;
+            const targetY = targetRect.top - workspaceRect.top + targetRect.height / 2;
             const bend = Math.max(24, (originX - targetX) * .45);
             nextConnectors.push({
               id: `${check.id}-${targetId}`,
@@ -161,6 +165,7 @@ export default function Home() {
     window.addEventListener("resize", updateConnectors);
     window.addEventListener("scroll", updateConnectors, true);
     const observer = new ResizeObserver(updateConnectors);
+    if (workspaceRef.current) observer.observe(workspaceRef.current);
     if (contentRef.current) observer.observe(contentRef.current);
     if (sidebarRef.current) observer.observe(sidebarRef.current);
     Object.values(checkCardRefs.current).forEach((card) => card && observer.observe(card));
@@ -326,7 +331,7 @@ export default function Home() {
 
   return (
     <main className="app-shell">
-      <section className="workspace">
+      <section className="workspace" ref={workspaceRef}>
         <aside className="sidebar" ref={sidebarRef}>
           <div className="sidebar-heading">
             <p>Attack path</p>
@@ -591,18 +596,17 @@ export default function Home() {
             {visibleChecks.length === 0 && <div className="empty">No checks match this view.</div>}
           </div>
         </section>
-
+        {attackConnectors.length > 0 && (
+          <svg className="attack-connector-layer" aria-hidden="true">
+            {attackConnectors.map((connector) => (
+              <g key={connector.id}>
+                <path className="attack-connector-path" d={connector.path} stroke={connector.color} />
+                <circle className="attack-connector-origin" cx={connector.originX} cy={connector.originY} r="3" fill={connector.color} />
+              </g>
+            ))}
+          </svg>
+        )}
       </section>
-      {attackConnectors.length > 0 && (
-        <svg className="attack-connector-layer" aria-hidden="true">
-          {attackConnectors.map((connector) => (
-            <g key={connector.id}>
-              <path className="attack-connector-path" d={connector.path} stroke={connector.color} />
-              <circle className="attack-connector-origin" cx={connector.originX} cy={connector.originY} r="3" fill={connector.color} />
-            </g>
-          ))}
-        </svg>
-      )}
       {showInformation && (
         <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setShowInformation(false)}>
           <section className="information-modal" role="dialog" aria-modal="true" aria-labelledby="information-title">
