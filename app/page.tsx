@@ -12,10 +12,8 @@ type Status = "todo" | "found" | "clear";
 
 type AttackConnector = {
   id: string;
-  path: string;
-  originX: number;
-  originY: number;
-  color: string;
+  checkId: string;
+  targetId: string;
 };
 
 const phases = normalizeMindmap(ocdMindmap);
@@ -77,7 +75,6 @@ export default function Home() {
   const [variableQuery, setVariableQuery] = useState("");
   const [showInformation, setShowInformation] = useState(false);
   const [activeCommandInfo, setActiveCommandInfo] = useState<CommandInfo | null>(null);
-  const [attackConnectors, setAttackConnectors] = useState<AttackConnector[]>([]);
   const [ready, setReady] = useState(false);
   const importInputRef = useRef<HTMLInputElement>(null);
   const phaseButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -85,7 +82,15 @@ export default function Home() {
   const workspaceRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
+  const connectorPathRefs = useRef<Record<string, SVGPathElement | null>>({});
+  const connectorOriginRefs = useRef<Record<string, SVGCircleElement | null>>({});
   const phase = phaseById[activeId];
+  const attackConnectors = useMemo<AttackConnector[]>(() => {
+    if (!showAttackPaths) return [];
+    return phase.checks.flatMap((check) => statuses[check.id] === "found"
+      ? check.next.map((targetId) => ({ id: `${check.id}-${targetId}`, checkId: check.id, targetId }))
+      : []);
+  }, [phase, showAttackPaths, statuses]);
 
   useEffect(() => {
     try {
@@ -121,44 +126,42 @@ export default function Home() {
 
   useEffect(() => {
     let frame = 0;
+    const snap = (value: number) => Math.round(value * 2) / 2;
+
+    function drawConnectors() {
+      frame = 0;
+      const workspace = workspaceRef.current;
+      if (!workspace || window.innerWidth <= 760) return;
+      const workspaceRect = workspace.getBoundingClientRect();
+
+      for (const connector of attackConnectors) {
+        const path = connectorPathRefs.current[connector.id];
+        const origin = connectorOriginRefs.current[connector.id];
+        const card = checkCardRefs.current[connector.checkId];
+        const target = phaseButtonRefs.current[connector.targetId];
+        if (!path || !origin || !card || !target) {
+          if (path) path.style.visibility = "hidden";
+          if (origin) origin.style.visibility = "hidden";
+          continue;
+        }
+
+        const cardRect = card.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const originX = snap(cardRect.left - workspaceRect.left);
+        const originY = snap(cardRect.top - workspaceRect.top + Math.min(32, cardRect.height / 2));
+        const targetX = snap(targetRect.right - workspaceRect.left + 4);
+        const targetY = snap(targetRect.top - workspaceRect.top + targetRect.height / 2);
+        const bend = snap(Math.max(24, (originX - targetX) * .45));
+        path.setAttribute("d", `M ${originX} ${originY} C ${originX - bend} ${originY}, ${targetX + bend} ${targetY}, ${targetX} ${targetY}`);
+        origin.setAttribute("cx", String(originX));
+        origin.setAttribute("cy", String(originY));
+        path.style.visibility = "visible";
+        origin.style.visibility = "visible";
+      }
+    }
+
     function updateConnectors() {
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        if (!showAttackPaths || window.innerWidth <= 760) {
-          setAttackConnectors([]);
-          return;
-        }
-
-        const workspace = workspaceRef.current;
-        if (!workspace) return;
-        const workspaceRect = workspace.getBoundingClientRect();
-        const nextConnectors: AttackConnector[] = [];
-        for (const check of phase.checks) {
-          if (statuses[check.id] !== "found" || check.next.length === 0) continue;
-          const card = checkCardRefs.current[check.id];
-          if (!card) continue;
-          const cardRect = card.getBoundingClientRect();
-
-          const originX = cardRect.left - workspaceRect.left;
-          const originY = cardRect.top - workspaceRect.top + Math.min(32, cardRect.height / 2);
-          for (const targetId of check.next) {
-            const target = phaseButtonRefs.current[targetId];
-            if (!target) continue;
-            const targetRect = target.getBoundingClientRect();
-            const targetX = targetRect.right - workspaceRect.left + 4;
-            const targetY = targetRect.top - workspaceRect.top + targetRect.height / 2;
-            const bend = Math.max(24, (originX - targetX) * .45);
-            nextConnectors.push({
-              id: `${check.id}-${targetId}`,
-              path: `M ${originX} ${originY} C ${originX - bend} ${originY}, ${targetX + bend} ${targetY}, ${targetX} ${targetY}`,
-              originX,
-              originY,
-              color: "#ff7900",
-            });
-          }
-        }
-        setAttackConnectors(nextConnectors);
-      });
+      if (!frame) frame = window.requestAnimationFrame(drawConnectors);
     }
 
     updateConnectors();
@@ -175,7 +178,7 @@ export default function Home() {
       window.removeEventListener("scroll", updateConnectors, true);
       observer.disconnect();
     };
-  }, [activeId, phase, query, showAttackPaths, showClear, statuses]);
+  }, [attackConnectors, query, showClear]);
 
   const foundChecks = allChecks.filter((check) => statuses[check.id] === "found");
   const unlocked = useMemo(() => {
@@ -600,8 +603,17 @@ export default function Home() {
           <svg className="attack-connector-layer" aria-hidden="true">
             {attackConnectors.map((connector) => (
               <g key={connector.id}>
-                <path className="attack-connector-path" d={connector.path} stroke={connector.color} />
-                <circle className="attack-connector-origin" cx={connector.originX} cy={connector.originY} r="3" fill={connector.color} />
+                <path
+                  ref={(element) => { connectorPathRefs.current[connector.id] = element; }}
+                  className="attack-connector-path"
+                  stroke="#ff7900"
+                />
+                <circle
+                  ref={(element) => { connectorOriginRefs.current[connector.id] = element; }}
+                  className="attack-connector-origin"
+                  r="3"
+                  fill="#ff7900"
+                />
               </g>
             ))}
           </svg>
